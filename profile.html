@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,104 +25,353 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .sidebar-item-active { color: #10B981; position: relative; }
-        .sidebar-item-active::before { content: ''; position: absolute; left: -16px; top: 25%; height: 50%; width: 4px; background-color: #10B981; border-radius: 0 4px 4px 0; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-item-active {
+            color: #10B981;
+            position: relative;
+        }
+
+        .sidebar-item-active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: #10B981;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
+
 <body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium">
     <div class="flex h-screen overflow-hidden relative">
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300">
+        </div>
 
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-60 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
             <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
                 <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
-                <div class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">Academix</div>
-                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                <div
+                    class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">
+                    Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <nav class="flex-1 px-4 mt-4 space-y-1">
-                <a href="home.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-house text-lg font-bold"></i>
+                <a href="home.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-house text-sm font-bold"></i>
                     <span class="text-sm">Dashboard</span>
                 </a>
-                <a href="sessions.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                <a href="sessions.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-graduation-cap text-sm"></i>
                     <span class="text-sm">Sessions</span>
                 </a>
-                <a href="grades.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-chart-line text-lg"></i>
+                <a href="grades.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chart-line text-sm"></i>
                     <span class="text-sm">Notes</span>
                 </a>
-                <a href="calendar.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-calendar-days text-lg"></i>
+                <a href="calendar.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-calendar-days text-sm"></i>
                     <span class="text-sm">Emploie du temps</span>
                 </a>
-                <a href="collab_chat.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-comments text-lg"></i>
+                <a href="collab_chat.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-comments text-sm"></i>
                     <span class="text-sm">Co-Working</span>
                 </a>
-                <a href="ai_upload.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
-                    <i class="fa-solid fa-brain text-lg"></i>
+                <a href="ai_upload.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-brain text-sm"></i>
                     <span class="text-sm">AI Revision</span>
                 </a>
-                <a href="profile.html" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
-                    <i class="fa-solid fa-user text-lg font-bold"></i>
+                <a href="profile.html" class="flex items-center gap-3 px-3 py-2 rounded-lg sidebar-item-active">
+                    <i class="fa-solid fa-user text-sm font-bold"></i>
                     <span class="text-sm">Profil</span>
                 </a>
             </nav>
-            <div class="mt-auto px-4 pb-8">
-                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
-                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+            <div class="mt-auto px-4 pb-6">
+                <a href="login.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
                     <span class="text-sm">Déconnexion</span>
                 </a>
             </div>
         </aside>
 
         <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
-            <header class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+            <header
+                class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
                 <div class="flex justify-between items-center max-w-7xl mx-auto">
                     <div class="flex items-center gap-4">
-                        <button id="sidebar-toggle" class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all"><i class="fa-solid fa-bars-staggered"></i></button>
+                        <button id="sidebar-toggle"
+                            class="lg:hidden w-9 h-9 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-lg hover:bg-white transition-all"><i
+                                class="fa-solid fa-bars-staggered text-sm"></i></button>
                         <div>
-                            <h1 class="text-lg lg:text-3xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">Mon Profil</h1>
+                            <h1
+                                class="text-lg lg:text-3xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">
+                                Mon Profil</h1>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <div class="p-4 lg:p-8 max-w-2xl mx-auto">
-                 <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] lg:rounded-[3rem] p-8 lg:p-12 border border-gray-100 dark:border-slate-800 shadow-xl">
-                      <div class="flex flex-col items-center mb-12">
-                           <div class="w-32 h-32 bg-emerald-500 rounded-[2.5rem] flex items-center justify-center text-white text-4xl font-black italic shadow-2xl shadow-emerald-500/30 mb-6">MA</div>
-                           <h2 class="text-2xl font-black text-gray-900 dark:text-slate-100 italic uppercase">Mahmud Ali</h2>
-                           <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1 italic">Étudiant • GEI/IT • Semestre 2</p>
-                      </div>
-                      <div class="space-y-8">
-                           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                <div>
-                                     <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">Email</p>
-                                     <p class="text-sm font-bold text-gray-800 dark:text-slate-200">mahmud.ali@academix.edu</p>
+            <div class="p-4 lg:p-8 max-w-6xl mx-auto">
+                <!-- Header avec dégradé -->
+                <div class="bg-gradient-to-r from-blue-500 via-purple-500 to-purple-600 rounded-xl lg:rounded-2xl p-8 lg:p-12 text-white mb-8 relative overflow-hidden">
+                    <div class="relative z-10 flex items-center justify-between">
+                        <div class="flex items-center gap-6">
+                            <div class="relative">
+                                <div class="w-20 h-20 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white text-2xl font-black border-4 border-white/30">
+                                    MA
                                 </div>
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white"></div>
+                            </div>
+                            <div>
+                                <h1 class="text-2xl lg:text-3xl font-black mb-1">Mahmud Ali</h1>
+                                <p class="text-white/80 font-medium">B.S. Computer Science • Class of 2025</p>
+                            </div>
+                        </div>
+                        <button class="bg-white/20 backdrop-blur hover:bg-white/30 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-sm"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-48 translate-x-48"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full translate-y-32 -translate-x-32"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- GENERAL INFO -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 shadow-lg p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-info-circle text-blue-500 text-sm"></i>
+                            </div>
+                            <h2 class="text-sm font-black text-gray-900 dark:text-slate-100 uppercase tracking-widest">GENERAL INFO</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-university text-gray-400 text-sm w-4"></i>
                                 <div>
-                                     <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">Téléphone</p>
-                                     <p class="text-sm font-bold text-gray-800 dark:text-slate-200">+33 6 12 34 56 78</p>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">UNIVERSITY</p>
+                                    <p class="font-bold text-gray-900 dark:text-slate-100">Tech Institute of Science</p>
                                 </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-graduation-cap text-gray-400 text-sm w-4"></i>
                                 <div>
-                                     <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">Numéro Étudiant</p>
-                                     <p class="text-sm font-bold text-gray-800 dark:text-slate-200">20240987</p>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">MAJOR</p>
+                                    <p class="font-bold text-gray-900 dark:text-slate-100">Computer Science</p>
                                 </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-id-card text-gray-400 text-sm w-4"></i>
                                 <div>
-                                     <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">Date de naissance</p>
-                                     <p class="text-sm font-bold text-gray-800 dark:text-slate-200">12 Mai 2003</p>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">STUDENT ID</p>
+                                    <p class="font-bold text-gray-900 dark:text-slate-100">20240987</p>
                                 </div>
-                           </div>
-                           <button class="w-full py-5 bg-gray-900 dark:bg-slate-800 text-white rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-500 transition-all italic">Modifier le profil</button>
-                      </div>
-                 </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-envelope text-gray-400 text-sm w-4"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">EMAIL</p>
+                                    <p class="font-bold text-blue-600 dark:text-blue-400">mahmud.ali@academix.edu</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-map-marker-alt text-gray-400 text-sm w-4"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">CAMPUS</p>
+                                    <p class="font-bold text-gray-900 dark:text-slate-100">North Campus</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Academic Standing -->
+                        <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700">
+                            <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">ACADEMIC STANDING</h3>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-gray-900 dark:text-slate-100">GPA: 3.8</span>
+                                <span class="text-sm font-bold text-emerald-600">Excellent</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 h-full w-[95%] rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CURRENT ENROLLMENT -->
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-purple-100 dark:bg-purple-500/10 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-book-open text-purple-500 text-sm"></i>
+                                </div>
+                                <h2 class="text-sm font-black text-gray-900 dark:text-slate-100 uppercase tracking-widest">CURRENT ENROLLMENT</h2>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1">
+                                View All <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- En-têtes du tableau -->
+                        <div class="grid grid-cols-12 gap-4 pb-3 border-b border-gray-100 dark:border-slate-700 mb-4">
+                            <div class="col-span-1">
+                                <p class="text-xs font-black text-gray-400 uppercase tracking-widest">SUBJECT</p>
+                            </div>
+                            <div class="col-span-6">
+                                <p class="text-xs font-black text-gray-400 uppercase tracking-widest"></p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-xs font-black text-gray-400 uppercase tracking-widest">STATUS</p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-xs font-black text-gray-400 uppercase tracking-widest">COEFFICIENT</p>
+                            </div>
+                            <div class="col-span-1"></div>
+                        </div>
+                        
+                        <!-- Cours -->
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg p-3 transition-colors">
+                                <div class="col-span-1">
+                                    <div class="w-8 h-8 bg-blue-100 dark:bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                        <span class="text-blue-600 font-bold text-sm">A</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-1">Advanced Algorithms</h3>
+                                    <p class="text-xs text-gray-500">CS-301 • Prof. Alan Turing</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs font-bold">In Progress</span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-2xl font-black text-gray-900 dark:text-slate-100">4.0</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg p-3 transition-colors">
+                                <div class="col-span-1">
+                                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-500/10 rounded-lg flex items-center justify-center">
+                                        <span class="text-purple-600 font-bold text-sm">D</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-1">Database Systems</h3>
+                                    <p class="text-xs text-gray-500">CS-304 • Prof. Ada Lovelace</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs font-bold">In Progress</span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-2xl font-black text-gray-900 dark:text-slate-100">3.0</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg p-3 transition-colors">
+                                <div class="col-span-1">
+                                    <div class="w-8 h-8 bg-pink-100 dark:bg-pink-500/10 rounded-lg flex items-center justify-center">
+                                        <span class="text-pink-600 font-bold text-sm">W</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-1">Web Development</h3>
+                                    <p class="text-xs text-gray-500">CS-202 • Prof. Tim Berners-Lee</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-lg text-xs font-bold">Upcoming Exam</span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-2xl font-black text-gray-900 dark:text-slate-100">3.0</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg p-3 transition-colors">
+                                <div class="col-span-1">
+                                    <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-500/10 rounded-lg flex items-center justify-center">
+                                        <span class="text-indigo-600 font-bold text-sm">L</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-1">Linear Algebra</h3>
+                                    <p class="text-xs text-gray-500">MATH-201 • Prof. Emmy Noether</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs font-bold">In Progress</span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-2xl font-black text-gray-900 dark:text-slate-100">2.0</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 gap-4 items-center hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg p-3 transition-colors">
+                                <div class="col-span-1">
+                                    <div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                                        <span class="text-emerald-600 font-bold text-sm">S</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <h3 class="font-bold text-gray-900 dark:text-slate-100 mb-1">Software Ethics</h3>
+                                    <p class="text-xs text-gray-500">CS-103 • Prof. Grace Hopper</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg text-xs font-bold">Completed</span>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-2xl font-black text-gray-900 dark:text-slate-100">1.0</span>
+                                </div>
+                                <div class="col-span-1">
+                                    <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-slate-700">
+                            <p class="text-sm text-gray-500">Showing 1 to 5 of 8 courses</p>
+                            <div class="flex gap-2">
+                                <button class="px-3 py-2 text-gray-400 hover:text-gray-600 text-sm">Previous</button>
+                                <button class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -149,4 +399,5 @@
         overlay.addEventListener('click', closeSidebar);
     </script>
 </body>
+
 </html>

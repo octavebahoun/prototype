@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academix - Statistiques</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -47,60 +48,73 @@
     <div class="flex h-screen overflow-hidden relative">
 
         <!-- Sidebar Overlay -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300">
+        </div>
 
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
             <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
                 <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
                 <div class="text-[#10B981] text-3xl font-extrabold flex items-center tracking-tight">
                     Academix
                 </div>
-                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i
+                        class="fa-solid fa-xmark text-2xl"></i></button>
             </div>
 
             <nav class="flex-1 px-4 mt-4 space-y-1">
-                <a href="home.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="home.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-house text-lg"></i>
                     </div>
                     <span class="font-semibold text-sm">Dashboard</span>
                 </a>
-                <a href="sessions.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div class="w-5 h-5 flex items-center justify-center relative transition-transform group-hover:scale-110">
+                <a href="sessions.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div
+                        class="w-5 h-5 flex items-center justify-center relative transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-envelope text-lg"></i>
-                        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">3</span>
+                        <span
+                            class="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">3</span>
                     </div>
                     <span class="font-semibold text-sm">Courses</span>
                 </a>
-                <a href="grades.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="grades.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-tv text-lg"></i>
                     </div>
                     <span class="font-semibold text-sm">Notes</span>
                 </a>
-                <a href="profile.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="profile.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-user-group text-lg"></i>
                     </div>
                     <span class="font-semibold text-sm">Profile</span>
                 </a>
-                <a href="calendar.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="calendar.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-folder text-lg"></i>
                     </div>
                     <span class="font-semibold text-sm">Emploie du Temps</span>
                 </a>
-                <a href="analytics.html" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active group transition-all">
+                <a href="analytics.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active group transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-chart-line text-lg"></i>
                     </div>
                     <span class="font-semibold text-sm">Statistiques</span>
                 </a>
                 <div class="pt-4 pb-2 px-4 shadow-sm">
-                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Outils IA</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Outils IA</p>
                 </div>
-                 <a href="ai_upload.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="ai_upload.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                     </div>
@@ -109,7 +123,8 @@
             </nav>
 
             <div class="mt-auto px-4 pb-8 space-y-1">
-                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                <a href="login.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
                     <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
                         <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
                     </div>
@@ -124,20 +139,26 @@
             <!-- Top Bar -->
             <header class="flex justify-between items-center mb-8">
                 <div class="flex items-center gap-4">
-                    <button id="sidebar-toggle" class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 rounded-xl hover:bg-white transition-all"><i class="fa-solid fa-bars-staggered"></i></button>
+                    <button id="sidebar-toggle"
+                        class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 rounded-xl hover:bg-white transition-all"><i
+                            class="fa-solid fa-bars-staggered"></i></button>
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800 tracking-tight italic">Analytics Studio</h1>
-                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1 italic">Performance de l'année 2023-24</p>
+                        <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1 italic">Performance de
+                            l'année 2023-24</p>
                     </div>
                 </div>
                 <div class="flex gap-4">
-                     <button class="bg-white border border-gray-100 px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm">Export PDF</button>
+                    <button
+                        class="bg-white border border-gray-100 px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm">Export
+                        PDF</button>
                 </div>
             </header>
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                <div
+                    class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Général</p>
                     <div class="flex items-end gap-2">
                         <span class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">15.4</span>
@@ -145,18 +166,21 @@
                     </div>
                     <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Moyenne Globale</p>
                 </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 border-emerald-100 bg-emerald-50/20">
+                <div
+                    class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 border-emerald-100 bg-emerald-50/20">
                     <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-4">Progression</p>
                     <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">84%</div>
                     <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Cursus Validé</p>
                 </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                <div
+                    class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Engagement</p>
                     <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">142h</div>
                     <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Temps d'étude S1</p>
                 </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Rank</p>
+                <div
+                    class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Rank</p>
                     <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">#3</div>
                     <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Position promotion</p>
                 </div>
@@ -164,51 +188,52 @@
 
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                 <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
                     <div class="flex justify-between items-center mb-10">
-                         <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest">Évolution des Notes</h3>
+                        <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest">Évolution des Notes</h3>
                     </div>
                     <canvas id="mainChart" height="200"></canvas>
                 </div>
                 <div class="bg-gray-900 p-10 rounded-[3rem] text-white overflow-hidden relative shadow-2xl">
                     <div class="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
-                    <h3 class="text-sm font-black text-emerald-400 uppercase tracking-widest mb-10">Compétences Clés</h3>
+                    <h3 class="text-sm font-black text-emerald-400 uppercase tracking-widest mb-10">Compétences Clés
+                    </h3>
                     <div class="space-y-8 relative z-10">
                         <div>
-                             <div class="flex justify-between mb-2">
+                            <div class="flex justify-between mb-2">
                                 <span class="text-[10px] font-black uppercase tracking-widest">Algorithmique</span>
                                 <span class="text-xs font-black italic">18/20</span>
-                             </div>
-                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
-                                 <div class="h-full bg-emerald-500 w-[90%]"></div>
-                             </div>
+                            </div>
+                            <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 w-[90%]"></div>
+                            </div>
                         </div>
                         <div>
-                             <div class="flex justify-between mb-2">
+                            <div class="flex justify-between mb-2">
                                 <span class="text-[10px] font-black uppercase tracking-widest">Mathématiques</span>
                                 <span class="text-xs font-black italic">14/20</span>
-                             </div>
-                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
-                                 <div class="h-full bg-emerald-500 w-[70%]"></div>
-                             </div>
+                            </div>
+                            <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 w-[70%]"></div>
+                            </div>
                         </div>
                         <div>
-                             <div class="flex justify-between mb-2">
+                            <div class="flex justify-between mb-2">
                                 <span class="text-[10px] font-black uppercase tracking-widest">Base de données</span>
                                 <span class="text-xs font-black italic">16/20</span>
-                             </div>
-                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
-                                 <div class="h-full bg-emerald-500 w-[80%]"></div>
-                             </div>
+                            </div>
+                            <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 w-[80%]"></div>
+                            </div>
                         </div>
                         <div>
-                             <div class="flex justify-between mb-2">
+                            <div class="flex justify-between mb-2">
                                 <span class="text-[10px] font-black uppercase tracking-widest">Réseaux</span>
                                 <span class="text-xs font-black italic">12/20</span>
-                             </div>
-                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
-                                 <div class="h-full bg-emerald-500 w-[60%]"></div>
-                             </div>
+                            </div>
+                            <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 w-[60%]"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -282,4 +307,5 @@
     </script>
 
 </body>
+
 </html>

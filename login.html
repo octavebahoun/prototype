@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - UniSTUDENT</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex h-screen overflow-hidden">
+    <!-- Left: Branding & Illustration -->
+    <div class="hidden lg:flex lg:w-1/2 bg-[#2E75B6] relative items-center justify-center p-16">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <div class="grid grid-cols-12 h-full gap-4 p-8">
+                <template x-for="i in 144">
+                    <div class="h-12 border-t border-l border-white/20"></div>
+                </template>
+            </div>
+        </div>
+        <div class="relative z-10 text-center text-white space-y-10">
+            <div class="space-y-4">
+                <div
+                    class="bg-white mx-auto w-24 h-24 rounded-3xl flex items-center justify-center text-[#2E75B6] shadow-2xl">
+                    <i data-lucide="graduation-cap" class="w-12 h-12"></i>
+                </div>
+                <h1 class="text-6xl font-black tracking-tighter uppercase italic leading-none">UniSTUDENT</h1>
+                <p class="text-blue-100/60 text-xs font-black uppercase tracking-[0.3em]">Portail Académique Unifié</p>
+            </div>
+            <div class="p-4 bg-white/5 rounded-[3rem] backdrop-blur-sm border border-white/10 shadow-2xl">
+                <img src="student_studying_illustration.png" alt="Etudiants"
+                    class="w-full max-w-sm mx-auto drop-shadow-2xl opacity-90">
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-12 bg-white">
+        <div class="w-full max-w-sm space-y-12">
+            <div class="space-y-4 text-center lg:text-left">
+                <h2 class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic">Accès Étudiant</h2>
+                <div class="h-1 w-12 bg-[#2E75B6] rounded-full mx-auto lg:mx-0"></div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">Saisissez vos
+                    identifiants institutionnels pour continuer.</p>
+            </div>
+
+            <form action="home.html" class="space-y-8">
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email
+                            Académique</label>
+                        <div class="relative group">
+                            <i data-lucide="mail"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#2E75B6] transition-colors"></i>
+                            <input type="email" placeholder="s.bernard@u-admin.edu"
+                                class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] outline-none transition-all font-medium text-sm">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mot de
+                                passe</label>
+                            <a href="#"
+                                class="text-[9px] text-[#2E75B6] font-black uppercase tracking-widest hover:underline">Oublié
+                                ?</a>
+                        </div>
+                        <div class="relative group">
+                            <i data-lucide="lock"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#2E75B6] transition-colors"></i>
+                            <input type="password" placeholder="••••••••"
+                                class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] outline-none transition-all font-medium text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <button type="submit"
+                        class="w-full bg-[#2E75B6] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all">
+                        Se connecter
+                    </button>
+                    <div class="flex items-center gap-4 py-2">
+                        <div class="h-px bg-gray-100 flex-1"></div>
+                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest italic">Ou</span>
+                        <div class="h-px bg-gray-100 flex-1"></div>
+                    </div>
+                    <button type="button"
+                        class="w-full bg-white text-gray-700 py-4 rounded-2xl border border-gray-100 font-bold text-xs flex items-center justify-center gap-3 hover:bg-gray-50 transition-all shadow-sm">
+                        <img src="https://www.google.com/favicon.ico"
+                            class="w-4 h-4 grayscale opacity-50 group-hover:grayscale-0" alt="">
+                        Authentification SSO
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-center text-[10px] text-gray-300 font-medium uppercase tracking-widest">
+                Portail sécurisé v2.4.0 • &copy; 2025 UniSTUDENT Lab.
+            </p>
+        </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

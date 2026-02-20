@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emploi du Temps - UniStudent</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .primary-bg {
+            background-color: #2E75B6;
+        }
+
+        .primary-text {
+            color: #2E75B6;
+        }
+
+        .sidebar-active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #FFFFFF;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: true }">
+    <!-- UNIFIED SIDEBAR -->
+    <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
+        class="primary-bg text-white transition-all duration-300 flex flex-col z-20 shadow-xl">
+        <div class="p-6 flex items-center justify-between">
+            <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen">
+                <div class="bg-white p-2 rounded-lg text-[#2E75B6]">
+                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight whitespace-nowrap uppercase">UniSTUDENT</span>
+            </div>
+            <button @click="sidebarOpen = !sidebarOpen" class="hover:bg-white/10 p-1 rounded transition-colors">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
+            <a href="home.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Tableau de Bord</span>
+            </a>
+            <a href="grades.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Mes Notes</span>
+            </a>
+            <a href="calendar.html" class="flex items-center gap-3 px-3 py-3 rounded-lg sidebar-active transition-all">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Calendrier</span>
+            </a>
+            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Outils IA</p>
+            </div>
+            <a href="ai_upload.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Révisions IA</span>
+            </a>
+            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Social</p>
+            </div>
+            <a href="sessions.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Sessions</span>
+            </a>
+            <a href="analytics.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10" x-show="sidebarOpen">
+            <a href="profile.html"
+                class="bg-white/10 p-4 rounded-xl flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer">
+                <div
+                    class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm">
+                    SB</div>
+                <div class="overflow-hidden">
+                    <p class="text-xs font-bold truncate">Sophie Bernard</p>
+                    <p class="text-[10px] text-white/60">Master 1 Info</p>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- UNIFIED HEADER -->
+        <header
+            class="bg-white h-20 px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10 transition-all shrink-0">
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-blue-50 text-[#2E75B6] px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-blue-100 uppercase italic">
+                    Calendrier</div>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <p class="text-[11px] text-gray-400 font-black uppercase tracking-widest leading-none">Sophie Bernard •
+                    Semaine 08</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center bg-gray-50 p-1.5 rounded-xl border border-gray-100 italic">
+                    <button
+                        class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all bg-white text-gray-900 shadow-sm border border-gray-100">Semaine</button>
+                    <button
+                        class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all text-gray-400 hover:text-gray-600">Mois</button>
+                </div>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <button
+                    class="bg-[#2E75B6] text-white p-2.5 rounded-xl shadow-lg shadow-blue-500/10 active:scale-95 transition-all"><i
+                        data-lucide="plus" class="w-5 h-5"></i></button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-hidden flex bg-[#F8FAFC]">
+            <!-- Calendar Grid -->
+            <div class="flex-1 overflow-y-auto no-scrollbar p-6">
+                <div
+                    class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full min-h-[600px]">
+                    <!-- Days Header -->
+                    <div class="grid grid-cols-7 border-b border-gray-100 bg-gray-50/50">
+                        <template x-for="day in ['LUN 23', 'MAR 24', 'MER 25', 'JEU 26', 'VEN 27', 'SAM 28', 'DIM 01']">
+                            <div
+                                class="py-4 flex flex-col items-center justify-center border-r border-gray-100 last:border-0 hover:bg-white transition-colors cursor-default group">
+                                <span
+                                    class="text-[8px] font-black text-gray-400 group-hover:text-[#2E75B6] transition-colors"
+                                    x-text="day.split(' ')[0]"></span>
+                                <span class="text-lg font-black italic text-gray-800" x-text="day.split(' ')[1]"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Time Grid -->
+                    <div class="flex-1 flex relative">
+                        <!-- Time labels sidebar -->
+                        <div class="w-16 border-r border-gray-50 flex flex-col pt-4">
+                            <template x-for="i in 10">
+                                <div class="h-20 flex items-start justify-center pt-2">
+                                    <span class="text-[9px] font-black text-gray-300 italic"
+                                        x-text="(i+7)+':00'"></span>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Columns -->
+                        <div class="flex-1 grid grid-cols-7 relative">
+                            <!-- Background Grid Lines -->
+                            <div class="absolute inset-0 grid grid-rows-10 pointer-events-none">
+                                <template x-for="i in 10">
+                                    <div class="border-b border-gray-50/50 h-20"></div>
+                                </template>
+                            </div>
+
+                            <template x-for="col in 7">
+                                <div class="border-r border-gray-50 last:border-0 relative p-1.5 h-full">
+                                    <!-- Sample Event 1 (Lundi 09:00 - 11:30) -->
+                                    <template x-if="col === 1">
+                                        <div
+                                            class="absolute top-20 left-1.5 right-1.5 h-[150%] bg-[#2E75B6] text-white p-3 rounded-2xl shadow-xl shadow-blue-500/10 border-l-2 border-blue-800 hover:scale-[1.02] transition-transform cursor-pointer group">
+                                            <p
+                                                class="text-[7px] font-black text-white/50 uppercase tracking-widest italic mb-1">
+                                                Amphi B • CM</p>
+                                            <p class="text-[10px] font-black italic leading-tight uppercase">Systèmes
+                                                Distribués</p>
+                                            <div
+                                                class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <i data-lucide="external-link" class="w-3 h-3"></i></div>
+                                        </div>
+                                    </template>
+
+                                    <!-- Sample Event 2 (Mercredi 14:00 - 17:00) -->
+                                    <template x-if="col === 3">
+                                        <div
+                                            class="absolute top-[420%] left-1.5 right-1.5 h-[180%] bg-emerald-500 text-white p-3 rounded-2xl shadow-xl shadow-emerald-500/10 border-l-2 border-emerald-700 hover:scale-[1.02] transition-transform cursor-pointer group">
+                                            <p
+                                                class="text-[7px] font-black text-white/50 uppercase tracking-widest italic mb-1">
+                                                Lab 4 • TP</p>
+                                            <p class="text-[10px] font-black italic leading-tight uppercase">
+                                                Intelligence Artificielle</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel: Stats & Mini Tasks -->
+            <div
+                class="w-80 border-l border-gray-100 bg-white p-6 space-y-8 shrink-0 flex flex-col overflow-y-auto no-scrollbar">
+                <div class="space-y-4">
+                    <h3 class="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic">Prochains Rendus
+                    </h3>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-100 hover:bg-white transition-all group cursor-pointer shadow-sm">
+                            <span
+                                class="text-[8px] font-black text-[#2E75B6] border border-blue-100 px-2 py-0.5 rounded-md uppercase italic">Demain
+                                • 18:00</span>
+                            <h4 class="text-xs font-black text-gray-800 italic uppercase tracking-tighter mt-2">Dossier
+                                Architecture IA</h4>
+                        </div>
+                        <div
+                            class="p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-purple-100 hover:bg-white transition-all group cursor-pointer shadow-sm">
+                            <span
+                                class="text-[8px] font-black text-purple-600 border border-purple-100 px-2 py-0.5 rounded-md uppercase italic">26
+                                Fév • 23:59</span>
+                            <h4 class="text-xs font-black text-gray-800 italic uppercase tracking-tighter mt-2">Quizz
+                                Algorithmique</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 rounded-3xl p-6 text-white relative overflow-hidden group mt-auto">
+                    <div class="absolute -right-6 -top-6 opacity-10 group-hover:scale-110 transition-transform"><i
+                            data-lucide="calendar" class="w-32 h-32"></i></div>
+                    <p class="text-[7px] font-black text-white/40 uppercase tracking-widest mb-1 italic">Taux
+                        d'assiduité</p>
+                    <p class="text-2xl font-black italic">94.2%</p>
+                    <div class="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-[94%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

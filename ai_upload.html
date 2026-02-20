@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révisions IA - UniStudent</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .primary-bg {
+            background-color: #2E75B6;
+        }
+
+        .primary-text {
+            color: #2E75B6;
+        }
+
+        .sidebar-active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #FFFFFF;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: true, processing: false, step: 1 }">
+    <!-- UNIFIED SIDEBAR -->
+    <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
+        class="primary-bg text-white transition-all duration-300 flex flex-col z-20 shadow-xl">
+        <div class="p-6 flex items-center justify-between">
+            <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen">
+                <div class="bg-white p-2 rounded-lg text-[#2E75B6]">
+                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight whitespace-nowrap uppercase">UniSTUDENT</span>
+            </div>
+            <button @click="sidebarOpen = !sidebarOpen" class="hover:bg-white/10 p-1 rounded transition-colors">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
+            <a href="home.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Tableau de Bord</span>
+            </a>
+            <a href="grades.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Mes Notes</span>
+            </a>
+            <a href="calendar.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Calendrier</span>
+            </a>
+            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Outils IA</p>
+            </div>
+            <a href="ai_upload.html" class="flex items-center gap-3 px-3 py-3 rounded-lg sidebar-active transition-all">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Révisions IA</span>
+            </a>
+            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Social</p>
+            </div>
+            <a href="sessions.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Sessions</span>
+            </a>
+            <a href="analytics.html"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10" x-show="sidebarOpen">
+            <a href="profile.html"
+                class="bg-white/10 p-4 rounded-xl flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer">
+                <div
+                    class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm">
+                    SB</div>
+                <div class="overflow-hidden">
+                    <p class="text-xs font-bold truncate">Sophie Bernard</p>
+                    <p class="text-[10px] text-white/60">Master 1 Info</p>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- UNIFIED HEADER -->
+        <header class="bg-white h-20 px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10">
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-purple-50 text-purple-600 px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-purple-100 uppercase italic">
+                    Assistant IA</div>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <p class="text-sm text-gray-500 font-medium hidden md:block uppercase tracking-tight">Générateur
+                    intelligent de révisions</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button
+                    class="bg-white text-gray-700 font-bold px-5 py-2 rounded-xl border border-gray-200 text-xs flex items-center gap-2 hover:bg-gray-50 transition-all shadow-sm">
+                    <i data-lucide="history" class="w-4 h-4 text-gray-400"></i> Historique
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-10 animate-in fade-in duration-500 no-scrollbar">
+            <div x-show="step === 1" class="max-w-4xl mx-auto space-y-12 py-20 text-center">
+                <div class="space-y-6">
+                    <div
+                        class="w-24 h-24 bg-blue-50 text-[#2E75B6] rounded-[2.5rem] flex items-center justify-center mx-auto shadow-inner">
+                        <i data-lucide="upload-cloud" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-5xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">
+                        Intelligence<br>Académique</h2>
+                    <p class="text-[11px] text-gray-400 font-black uppercase tracking-[0.3em] max-w-sm mx-auto italic">
+                        Convertissez vos PDFs en Masterclass Interactive</p>
+                </div>
+
+                <div class="relative group cursor-pointer"
+                    @click="processing = true; setTimeout(() => { processing = false; step = 2; }, 2000)">
+                    <div
+                        class="absolute inset-0 bg-[#2E75B6] rounded-3xl blur-2xl opacity-10 group-hover:opacity-20 transition-opacity">
+                    </div>
+                    <div
+                        class="relative bg-white border-2 border-dashed border-gray-100 rounded-3xl p-16 hover:border-[#2E75B6]/50 transition-all shadow-sm">
+                        <i data-lucide="plus-circle"
+                            class="w-12 h-12 text-gray-200 group-hover:text-[#2E75B6] group-hover:scale-110 transition-all duration-500 mx-auto mb-6"></i>
+                        <h4
+                            class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic group-hover:text-gray-800 transition-colors">
+                            Déposer vos fichiers ici</h4>
+                        <p class="text-[8px] text-gray-300 font-bold mt-2">PDF, PPTX, DOCX jusqu'à 25Mo</p>
+                    </div>
+                </div>
+
+                <!-- History list (Simplified) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto text-left">
+                    <div
+                        class="p-5 bg-white border border-gray-100 rounded-3xl hover:border-blue-200 transition-all group cursor-pointer">
+                        <p class="text-[8px] font-black text-gray-300 uppercase italic mb-1">Dernière analyse</p>
+                        <p class="text-sm font-bold text-gray-700 group-hover:text-[#2E75B6]">Microservices Overview.pdf
+                        </p>
+                    </div>
+                    <div
+                        class="p-5 bg-white border border-gray-100 rounded-3xl hover:border-blue-200 transition-all group cursor-pointer">
+                        <p class="text-[8px] font-black text-gray-300 uppercase italic mb-1">Performance: 85%</p>
+                        <p class="text-sm font-bold text-gray-700 group-hover:text-[#2E75B6]">Algorithmes Avancés S1.pdf
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: RESULTS -->
+            <div x-show="step === 2" class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto h-full">
+                <!-- Left: Fiche de Révision -->
+                <div
+                    class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-8 overflow-y-auto no-scrollbar">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="bg-blue-50 text-[#2E75B6] px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest italic border border-blue-100">Synthèse
+                                IA</span>
+                            <span
+                                class="text-[8px] font-black text-gray-400 uppercase italic tracking-widest">Confiance:
+                                98%</span>
+                        </div>
+                        <h1 class="text-2xl font-black text-gray-900 tracking-tighter uppercase italic leading-tight">
+                            Architecture Microservices</h1>
+                    </div>
+
+                    <div class="prose prose-sm font-medium text-gray-600 leading-relaxed space-y-8">
+                        <section class="space-y-4">
+                            <h3
+                                class="text-md font-black text-gray-800 uppercase italic border-l-4 border-[#2E75B6] pl-4">
+                                1. Concepts Fondamentaux</h3>
+                            <p>L'approche microservices consiste à structurer une application comme un ensemble de
+                                services couplés de manière lâche (loose coupling) et déployables de manière
+                                indépendante.</p>
+                        </section>
+
+                        <section class="space-y-4">
+                            <h3
+                                class="text-md font-black text-gray-800 uppercase italic border-l-4 border-emerald-400 pl-4">
+                                2. Caractéristiques Clés</h3>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="p-5 bg-gray-50 rounded-3xl border border-gray-100">
+                                    <p class="font-bold text-gray-800">Autonomie Totale</p>
+                                    <p class="text-xs text-gray-500 mt-1 italic">Chaque service peut varier ses technos
+                                        et ses cycles de déploiement.</p>
+                                </div>
+                                <div class="p-5 bg-gray-50 rounded-3xl border border-gray-100">
+                                    <p class="font-bold text-gray-800">Spécialisation</p>
+                                    <p class="text-xs text-gray-500 mt-1 italic">Un service = une fonction métier
+                                        (Single Responsibility Principle).</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Right: Quiz Interactive -->
+                <div class="flex flex-col space-y-8">
+                    <div class="flex items-center justify-between px-6">
+                        <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] italic">Session de
+                            Validation</h3>
+                        <div
+                            class="bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest italic border border-emerald-100">
+                            Score: 240 / 1000</div>
+                    </div>
+
+                    <div
+                        class="bg-gray-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden flex-1 flex flex-col group">
+                        <div
+                            class="absolute -right-10 -top-10 opacity-5 group-hover:scale-110 transition-transform duration-1000">
+                            <i data-lucide="zap" class="w-48 h-48"></i></div>
+
+                        <div class="relative z-10 space-y-8 flex-1 flex flex-col">
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2">
+                                    <p class="text-[8px] font-black text-white/30 uppercase tracking-widest italic">
+                                        Question 04 / 10</p>
+                                    <div class="w-32 h-1 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="w-2/5 h-full bg-[#2E75B6]"></div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center font-black text-[10px] italic bg-white/5">
+                                    25s</div>
+                            </div>
+
+                            <h2 class="text-xl font-black italic tracking-tighter leading-tight">Lequel de ces principes
+                                est CRUCIAL pour le découplage des microservices ?</h2>
+
+                            <div class="space-y-3">
+                                <button
+                                    class="w-full text-left p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white hover:text-gray-900 transition-all group flex items-center gap-4">
+                                    <span
+                                        class="w-8 h-8 rounded-xl bg-white/10 group-hover:bg-[#2E75B6] group-hover:text-white flex items-center justify-center font-black text-[10px] italic">A</span>
+                                    <span class="font-bold text-xs italic">Base de données partagée</span>
+                                </button>
+                                <button
+                                    class="w-full text-left p-4 bg-white border border-transparent rounded-2xl text-gray-900 group flex items-center gap-4 shadow-lg">
+                                    <span
+                                        class="w-8 h-8 rounded-xl bg-[#2E75B6] text-white flex items-center justify-center font-black text-[10px] italic">B</span>
+                                    <span class="font-bold text-xs italic">Communication via API Gateway</span>
+                                </button>
+                                <button
+                                    class="w-full text-left p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white hover:text-gray-900 transition-all group flex items-center gap-4">
+                                    <span
+                                        class="w-8 h-8 rounded-xl bg-white/10 group-hover:bg-[#2E75B6] group-hover:text-white flex items-center justify-center font-black text-[10px] italic">C</span>
+                                    <span class="font-bold text-xs italic">Monolithe modulaire</span>
+                                </button>
+                            </div>
+
+                            <div class="mt-auto flex justify-between items-center">
+                                <p class="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] italic">Calcul
+                                    de score en temps réel</p>
+                                <button
+                                    class="primary-bg p-5 rounded-3xl shadow-xl shadow-blue-500/20 active:scale-95 transition-all"><i
+                                        data-lucide="arrow-right" class="w-6 h-6"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div x-show="processing" x-transition
+            class="fixed inset-0 bg-white/80 backdrop-blur-xl z-50 flex flex-col items-center justify-center gap-8">
+            <div class="relative w-32 h-32">
+                <div class="absolute inset-0 rounded-full border-8 border-gray-100"></div>
+                <div class="absolute inset-0 rounded-full border-8 border-[#2E75B6] border-t-transparent animate-spin">
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i data-lucide="cpu" class="w-10 h-10 text-[#2E75B6] animate-pulse"></i>
+                </div>
+            </div>
+            <div class="text-center space-y-2">
+                <p class="text-[11px] font-black text-[#2E75B6] uppercase tracking-[0.4em] italic animate-pulse">Neural
+                    Engine Processing</p>
+                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest italic">Analyse sémantique du
+                    document...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

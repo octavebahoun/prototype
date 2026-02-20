@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniSTUDENT - Portail Académique Unifié</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .primary-bg {
+            background-color: #2E75B6;
+        }
+
+        .sidebar-active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #FFFFFF;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            border-color: #2E75B6;
+            box-shadow: 0 10px 20px -5px rgba(46, 117, 182, 0.1);
+        }
+    </style>
+</head>
+
+<body x-data="{ 
+    activeTab: 'home',
+    username: 'Sophie',
+    sidebarOpen: true,
+    aiProcessing: false,
+    showSummary: false,
+    tasks: [
+        { id: 1, title: 'Projet Développement Web', date: 'Demain', priority: 'Haut', icon: 'code' },
+        { id: 2, title: 'Examen de Réseaux', date: 'Lundi prochain', priority: 'Medium', icon: 'globe' }
+    ]
+}">
+    <div class="flex h-screen overflow-hidden">
+        <!-- UNIFIED SIDEBAR -->
+        <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
+            class="primary-bg text-white transition-all duration-300 flex flex-col z-20 shadow-xl shadow-blue-900/10">
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen">
+                    <div class="bg-white p-2 rounded-lg text-[#2E75B6]">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight whitespace-nowrap uppercase">UniSTUDENT</span>
+                </div>
+                <button @click="sidebarOpen = !sidebarOpen"
+                    class="hover:bg-white/10 p-1 rounded transition-colors duration-300">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
+                <button @click="activeTab = 'home'"
+                    :class="activeTab === 'home' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Tableau de Bord</span>
+                </button>
+                <button @click="activeTab = 'grades'"
+                    :class="activeTab === 'grades' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Mes Notes</span>
+                </button>
+                <button @click="activeTab = 'calendar'"
+                    :class="activeTab === 'calendar' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Calendrier</span>
+                </button>
+                <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Outils IA</p>
+                </div>
+                <button @click="activeTab = 'ai'"
+                    :class="activeTab === 'ai' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Révisions IA</span>
+                </button>
+                <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
+                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Social</p>
+                </div>
+                <button @click="activeTab = 'collab'"
+                    :class="activeTab === 'collab' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Collaborer</span>
+                </button>
+                <button @click="activeTab = 'analytics'"
+                    :class="activeTab === 'analytics' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
+                    class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
+                    <i data-lucide="trending-up" class="w-5 h-5"></i>
+                    <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-white/10" x-show="sidebarOpen">
+                <button @click="activeTab = 'profile'"
+                    class="w-full bg-white/10 p-4 rounded-xl flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm">
+                        SB</div>
+                    <div class="text-left overflow-hidden">
+                        <p class="text-xs font-bold truncate">Sophie Bernard</p>
+                        <p class="text-[10px] text-white/60">Master 1 Info</p>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-[#F8FAFC]">
+            <!-- UNIFIED HEADER -->
+            <header
+                class="sticky top-0 bg-white h-20 px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10 transition-all">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="bg-blue-50 text-[#2E75B6] px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-blue-100 uppercase italic">
+                        <span x-text="activeTab === 'home' ? 'Espace Étudiant' : 
+                                      activeTab === 'grades' ? 'Résultats' :
+                                      activeTab === 'calendar' ? 'Calendrier' :
+                                      activeTab === 'ai' ? 'Assistant IA' :
+                                      activeTab === 'collab' ? 'Collaboration' :
+                                      activeTab === 'analytics' ? 'Analyses' : 'Profil'"></span>
+                    </div>
+                    <div class="h-4 w-px bg-gray-200"></div>
+                    <p class="text-[11px] text-gray-400 font-black uppercase tracking-widest"
+                        x-text="username + ' Bernard • S1 2026'"></p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span class="text-[10px] font-black uppercase italic text-gray-500">Serveur: On</span>
+                    </div>
+                    <button
+                        class="bg-gray-100 text-gray-500 p-2 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-10 flex-1">
+                <!-- TAB CONTENT: HOME -->
+                <div x-show="activeTab === 'home'" x-cloak class="space-y-10 animate-in fade-in duration-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div
+                            class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-6 group hover:shadow-xl transition-all">
+                            <div class="relative w-28 h-28">
+                                <svg class="w-full h-full transform -rotate-90 drop-shadow-sm">
+                                    <circle cx="56" cy="56" r="48" stroke="#F1F5F9" stroke-width="8"
+                                        fill="transparent" />
+                                    <circle cx="56" cy="56" r="48" stroke="#2E75B6" stroke-width="10" fill="transparent"
+                                        stroke-dasharray="301" stroke-dashoffset="120" stroke-linecap="round" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-2xl font-black text-gray-800 italic">14.8</span>
+                                    <span
+                                        class="text-[9px] font-black text-gray-400 uppercase tracking-widest">/20</span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic">Moyenne
+                                Générale</p>
+                        </div>
+
+                        <div
+                            class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 lg:col-span-2 space-y-6">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-[11px] font-black text-gray-800 uppercase tracking-[0.2em] italic">
+                                    Tâches Critiques</h3>
+                                <span
+                                    class="bg-red-50 text-red-500 text-[9px] px-2 py-1 rounded font-black uppercase tracking-widest">Urgent</span>
+                            </div>
+                            <div class="grid grid-cols-1 gap-4">
+                                <template x-for="task in tasks" :key="task.id">
+                                    <div
+                                        class="flex items-center justify-between p-5 bg-gray-50/50 border border-gray-100 rounded-3xl hover:bg-white transition-all cursor-pointer group">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-[#2E75B6] group-hover:bg-[#2E75B6] group-hover:text-white transition-colors">
+                                                <i :data-lucide="task.icon" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-gray-700" x-text="task.title"></p>
+                                                <p class="text-[10px] text-gray-300 font-bold uppercase tracking-widest italic"
+                                                    x-text="task.priority"></p>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                                            x-text="task.date"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-[#2E75B6] p-8 rounded-[2.5rem] shadow-xl shadow-blue-500/20 text-white relative group overflow-hidden flex flex-col justify-between">
+                            <div
+                                class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="book" class="w-32 h-32"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2 italic">
+                                    Prochain Cours</h3>
+                                <p class="text-2xl font-black italic tracking-tighter leading-tight italic">Génie
+                                    Logiciel</p>
+                                <p class="text-xs font-medium opacity-80 mt-2">Amphi C • 14:00 - 16:30</p>
+                            </div>
+                            <button
+                                class="w-full py-4 bg-white/20 hover:bg-white/30 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all mt-6 shadow-sm">Feuille
+                                d'appel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: GRADES -->
+                <div x-show="activeTab === 'grades'" x-cloak
+                    class="space-y-8 animate-in slide-in-from-right-4 duration-500">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Registre des
+                            Résultats</h2>
+                        <button class="bg-white border border-gray-200 p-3 rounded-2xl hover:bg-gray-50 shadow-sm"><i
+                                data-lucide="download" class="w-5 h-5 text-gray-400"></i></button>
+                    </div>
+                    <div class="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden p-2">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr
+                                    class="text-[10px] font-black text-gray-300 uppercase tracking-widest italic border-b border-gray-50">
+                                    <th class="px-10 py-8">Unité d'Enseignement</th>
+                                    <th class="px-10 py-8 text-center text-[#2E75B6]">Crédits</th>
+                                    <th class="px-10 py-8 text-center text-[#2E75B6]">Score /20</th>
+                                    <th class="px-10 py-8 text-right">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <tr class="group hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-10 py-6 font-bold text-gray-800">Architecture des Systèmes Distribués
+                                    </td>
+                                    <td class="px-10 py-6 text-center text-sm font-black text-gray-400">6 ECTS</td>
+                                    <td class="px-10 py-6 text-center font-black text-2xl text-[#2E75B6] italic">16.5
+                                    </td>
+                                    <td class="px-10 py-6 text-right">
+                                        <span
+                                            class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-emerald-100">Validé</span>
+                                    </td>
+                                </tr>
+                                <tr class="group hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-10 py-6 font-bold text-gray-800">Advanced Algorithmic Patterns</td>
+                                    <td class="px-10 py-6 text-center text-sm font-black text-gray-400">4 ECTS</td>
+                                    <td class="px-10 py-6 text-center font-black text-2xl text-[#2E75B6] italic">14.0
+                                    </td>
+                                    <td class="px-10 py-6 text-right">
+                                        <span
+                                            class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest italic border border-emerald-100">Validé</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: CALENDAR -->
+                <div x-show="activeTab === 'calendar'" x-cloak class="space-y-8 animate-in fade-in duration-500">
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-1">
+                            <h2 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Ma
+                                Planification</h2>
+                            <p
+                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic leading-none">
+                                Semaine 08 • 23 Fév - 01 Mar 2026</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="bg-white border border-gray-100 p-4 rounded-2xl text-gray-400 hover:text-[#2E75B6] transition-all"><i
+                                    data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                            <button
+                                class="bg-white border border-gray-100 p-4 rounded-2xl text-gray-400 hover:text-[#2E75B6] transition-all"><i
+                                    data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-[3rem] border border-gray-100 shadow-sm min-h-[600px] grid grid-cols-6 overflow-hidden">
+                        <div class="col-span-1 border-r border-gray-100 bg-gray-50/30">
+                            <div class="h-20 border-b border-gray-100 bg-white flex items-center justify-center">
+                                <span class="text-[9px] font-black text-gray-300 uppercase italic">T0 - Zulu</span>
+                            </div>
+                            <template x-for="i in 10">
+                                <div class="h-24 border-b border-gray-50 flex items-center justify-center p-4">
+                                    <span class="text-[9px] font-black text-gray-200" x-text="(i+7)+':00'"></span>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="col-span-5 grid grid-cols-5 p-2 gap-2">
+                            <template x-for="day in ['LUN', 'MAR', 'MER', 'JEU', 'VEN']">
+                                <div class="space-y-2">
+                                    <div
+                                        class="h-16 flex flex-col items-center justify-center bg-white border border-gray-50 rounded-2xl mb-4 group hover:border-[#2E75B6] transition-all">
+                                        <p class="text-[9px] font-black text-gray-400" x-text="day"></p>
+                                        <p class="text-lg font-black italic text-gray-800"
+                                            x-text="day === 'MER' ? '25' : '..'"></p>
+                                    </div>
+                                    <div x-show="day === 'LUN'"
+                                        class="p-6 bg-[#2E75B6] text-white rounded-[2rem] shadow-xl shadow-blue-500/10 space-y-1">
+                                        <p class="text-[8px] font-black text-white/50 uppercase italic tracking-widest">
+                                            CM</p>
+                                        <p class="text-xs font-black italic">Architecture</p>
+                                    </div>
+                                    <div x-show="day === 'MER'"
+                                        class="p-6 bg-emerald-500 text-white rounded-[2rem] shadow-xl shadow-emerald-500/10 space-y-1">
+                                        <p class="text-[8px] font-black text-white/50 uppercase italic tracking-widest">
+                                            PROJET</p>
+                                        <p class="text-xs font-black italic">Lab Web Dev</p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: AI -->
+                <div x-show="activeTab === 'ai'" x-cloak
+                    class="max-w-4xl mx-auto space-y-12 animate-in zoom-in-95 duration-500 py-10">
+                    <div x-show="!showSummary" class="max-w-2xl mx-auto space-y-8 py-10 text-center">
+                        <div class="space-y-4">
+                            <h2
+                                class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">
+                                Intelligence Académique</h2>
+                            <p
+                                class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] max-w-sm mx-auto leading-relaxed italic">
+                                Téléchargez vos supports de cours pour générer des quizz et fiches synthétiques.</p>
+                        </div>
+                        <div class="border-2 border-dashed border-blue-100 rounded-3xl p-16 bg-white hover:bg-blue-50/50 hover:border-[#2E75B6]/30 transition-all cursor-pointer group shadow-sm"
+                            @click="aiProcessing = true; setTimeout(() => { aiProcessing = false; showSummary = true; }, 2000)">
+                            <i data-lucide="upload-cloud"
+                                class="w-12 h-12 text-gray-300 group-hover:text-[#2E75B6] group-hover:scale-110 transition-all duration-500 mx-auto mb-4"></i>
+                            <h4
+                                class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic group-hover:text-gray-800 transition-colors">
+                                Déposer un PDF ou PPTX</h4>
+                        </div>
+                    </div>
+
+                    <!-- Summary/Quiz results (simplified for SPA) -->
+                    <div x-show="showSummary" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                            <div class="space-y-1">
+                                <span
+                                    class="text-[9px] font-black text-[#2E75B6] uppercase tracking-widest italic">Résumé
+                                    IA</span>
+                                <h1
+                                    class="text-2xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">
+                                    Patterns Architecturaux</h1>
+                            </div>
+                            <div class="prose prose-sm font-medium text-gray-600 leading-relaxed space-y-4">
+                                <p>L'architecture microservices permet un découplage fort entre les composants...</p>
+                                <ul class="list-disc pl-5 space-y-2 text-[#2E75B6]/80 font-bold italic">
+                                    <li>Déploiement indépendant</li>
+                                    <li>Scalabilité granulaire</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-gray-900 p-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-between">
+                            <div class="absolute -right-8 -top-8 rotate-12 opacity-5"><i data-lucide="help-circle"
+                                    class="w-32 h-32 text-white"></i></div>
+                            <div>
+                                <h3 class="text-base font-bold text-white italic mb-6 leading-relaxed">Question:
+                                    Pourquoi
+                                    utiliser un API Gateway en Microservices ?</h3>
+                                <div class="space-y-3">
+                                    <button
+                                        class="quiz-card w-full text-left p-4 bg-white/5 border border-white/10 rounded-2xl text-xs font-bold text-white/80 hover:bg-white hover:text-black transition-all">Centraliser
+                                        l'authentification</button>
+                                    <button
+                                        class="quiz-card w-full text-left p-4 bg-white/5 border border-white/10 rounded-2xl text-xs font-bold text-white/80 hover:bg-white hover:text-black transition-all">Réduire
+                                        la latence globale</button>
+                                </div>
+                            </div>
+                            <div class="mt-12 flex justify-between items-center px-2">
+                                <p
+                                    class="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] italic leading-none">
+                                    Question 01/10</p>
+                                <button class="primary-bg p-3 rounded-2xl group transition-all"><i
+                                        data-lucide="arrow-right"
+                                        class="w-5 h-5 text-white group-hover:translate-x-1 transition-transform"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading overlay -->
+                    <div x-show="aiProcessing" x-transition
+                        class="fixed inset-0 bg-white/80 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-6">
+                        <div class="relative w-24 h-24">
+                            <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
+                            <div
+                                class="absolute inset-0 rounded-full border-4 border-[#2E75B6] border-t-transparent animate-spin">
+                            </div>
+                        </div>
+                        <p
+                            class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] italic animate-pulse tracking-widest">
+                            Analyse IA en cours...</p>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT: COLLAB, ANALYTICS, PROFILE... (Simplified versions for SPA demonstration) -->
+                <div x-show="['collab', 'analytics', 'profile'].includes(activeTab)" x-cloak
+                    class="flex flex-col items-center justify-center h-[60vh] space-y-8 animate-in fade-in duration-500">
+                    <div
+                        class="p-8 bg-white rounded-3xl border border-gray-100 shadow-sm text-center space-y-4 max-w-sm">
+                        <h3 class="text-xl font-black text-gray-900 tracking-tighter uppercase italic leading-none"
+                            x-text="'Accès à ' + activeTab"></h3>
+                        <p class="text-xs font-medium text-gray-400 leading-relaxed italic">Cette fonctionnalité est
+                            disponible dans les modules dédiés.</p>
+                        <a :href="activeTab + '.html'"
+                            class="inline-block bg-[#2E75B6] text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-all">Ouvrir
+                            le module</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script> lucide.createIcons(); </script>
+</body>
+
+</html>

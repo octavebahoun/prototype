@@ -1,213 +1,204 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="fr" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academix - Administration</title>
+    <title>Academix - Super Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC;
-        }
-
-        .admin-sidebar-active {
-            color: #10B981;
-            background-color: #f0fdf4;
-            position: relative;
-        }
-
-        .admin-sidebar-active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 25%;
-            height: 50%;
-            width: 4px;
-            background-color: #10B981;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active { color: #10B981; position: relative; }
+        .sidebar-item-active::before { content: ''; position: absolute; left: -16px; top: 25%; height: 50%; width: 4px; background-color: #10B981; border-radius: 0 4px 4px 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-
-<body class="bg-[#F8FAFC]" x-data="{ activeTab: 'overview' }">
-
-    <div class="flex h-screen overflow-hidden">
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium overflow-hidden">
+    <div class="flex h-screen relative">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
         <!-- Sidebar -->
-        <aside class="w-24 lg:w-72 bg-white border-r border-gray-100 flex flex-col transition-all duration-300">
-            <div class="p-10 flex flex-col items-center lg:items-start gap-4">
-                <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-crown text-xl"></i>
-                </div>
-                <div class="lg:block hidden">
-                    <h1 class="text-xl font-black text-gray-900 tracking-tighter uppercase italic">Academix <span class="text-emerald-500">Admin</span></h1>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1">Super Admin Panel</p>
-                </div>
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div class="text-emerald-500 text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500 transition-colors">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
             </div>
-
-            <nav class="flex-1 px-6 mt-8 space-y-2">
-                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'admin-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-chart-pie text-lg"></i>
-                    </div>
-                    <span class="font-bold text-sm lg:block hidden">Vue d'ensemble</span>
-                </button>
-                <button @click="activeTab = 'departments'" :class="activeTab === 'departments' ? 'admin-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-building text-lg"></i>
-                    </div>
-                    <span class="font-bold text-sm lg:block hidden">Départements</span>
-                </button>
-                <button @click="activeTab = 'chefs'" :class="activeTab === 'chefs' ? 'admin-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-user-shield text-lg"></i>
-                    </div>
-                    <span class="font-bold text-sm lg:block hidden">Chefs de Dept</span>
-                </button>
-                <button @click="activeTab = 'students'" :class="activeTab === 'students' ? 'admin-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-users text-lg"></i>
-                    </div>
-                    <span class="font-bold text-sm lg:block hidden">Étudiants</span>
-                </button>
-                <div class="pt-8 pb-4">
-                     <p class="text-[9px] font-black text-gray-300 uppercase tracking-widest pl-6">Configuration</p>
-                </div>
-                 <button class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-gray-400 hover:bg-gray-50 transition-all group">
-                    <i class="fa-solid fa-gear text-lg"></i>
-                    <span class="font-bold text-sm lg:block hidden">Paramètres</span>
-                </button>
+            
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <div class="px-4 py-2 text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest">Admin Control</div>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-gauge-high text-lg"></i>
+                    <span class="text-sm">Vue d'ensemble</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-users-gear text-lg"></i>
+                    <span class="text-sm">Gérer Utilisateurs</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-sitemap text-lg"></i>
+                    <span class="text-sm">Départements</span>
+                </a>
+                <a href="analytics.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chart-pie text-lg"></i>
+                    <span class="text-sm">Analytics</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-shield-halved text-lg"></i>
+                    <span class="text-sm">Sécurité</span>
+                </a>
             </nav>
 
-            <div class="p-8">
-                <div class="bg-gray-900 rounded-3xl p-6 text-white relative overflow-hidden hidden lg:block">
-                     <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/20 rounded-full blur-2xl"></div>
-                     <p class="text-[10px] text-emerald-400 font-black uppercase tracking-widest mb-2">Support</p>
-                     <p class="text-xs font-medium text-gray-300 leading-relaxed">Une question technique ?</p>
-                     <button class="mt-4 w-full bg-white text-gray-900 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all">Contacter IT</button>
-                </div>
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                    <span class="text-sm">Déconnexion</span>
+                </a>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-12 no-scrollbar">
-
-            <!-- Top Bar -->
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">Console d'administration</h1>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2 italic">Contrôle global du système Academix</p>
-                </div>
-                <div class="flex items-center gap-6">
-                    <div class="flex -space-x-3">
-                         <div class="w-10 h-10 rounded-full border-4 border-white bg-blue-50 flex items-center justify-center text-[10px] font-black italic">JD</div>
-                         <div class="w-10 h-10 rounded-full border-4 border-white bg-purple-50 flex items-center justify-center text-[10px] font-black italic">AB</div>
-                         <div class="w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black italic">+12</div>
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <header class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4 text-emerald-500">
+                        <button id="sidebar-toggle" class="lg:hidden w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all">
+                            <i class="fa-solid fa-bars-staggered"></i>
+                        </button>
+                        <div>
+                            <h1 class="text-lg lg:text-3xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">Super Admin</h1>
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Academix Global Management</p>
+                        </div>
                     </div>
-                    <button class="w-12 h-12 rounded-2xl border border-gray-100 flex items-center justify-center hover:bg-white transition-all shadow-sm">
-                        <i class="fa-solid fa-bell text-gray-400"></i>
-                    </button>
                 </div>
             </header>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Étudiants</p>
-                    <div class="text-4xl font-black text-gray-900 tracking-tighter leading-none italic">14,208</div>
-                    <p class="text-[10px] text-emerald-500 font-black tracking-widest mt-2 uppercase">+4% vs Last Year</p>
-                </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Chefs Dept</p>
-                    <div class="text-4xl font-black text-gray-900 tracking-tighter leading-none italic">32</div>
-                    <p class="text-[10px] text-gray-300 font-bold tracking-widest mt-2 uppercase text-center">-</p>
-                </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Cours Actifs</p>
-                    <div class="text-4xl font-black text-gray-900 tracking-tighter leading-none italic">1,452</div>
-                    <p class="text-[10px] text-emerald-500 font-black tracking-widest mt-2 uppercase">Healthy</p>
-                </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Uptime</p>
-                    <div class="text-4xl font-black text-gray-900 tracking-tighter leading-none italic">99.9%</div>
-                    <p class="text-[10px] text-emerald-500 font-black tracking-widest mt-2 uppercase">Stable</p>
-                </div>
-            </div>
-
-            <!-- Content Area (Overview) -->
-            <div x-show="activeTab === 'overview'" class="space-y-12">
-                 <div class="bg-gray-900 rounded-[3rem] p-12 text-white relative overflow-hidden flex flex-col md:flex-row items-center gap-12 shadow-2xl">
-                     <div class="absolute right-0 top-0 w-96 h-96 bg-emerald-500/10 rounded-full translate-x-32 -translate-y-32 blur-3xl"></div>
-                     <div class="flex-1 space-y-6">
-                        <span class="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Alert Système</span>
-                        <h2 class="text-4xl font-black tracking-tighter leading-none uppercase italic">Maintenance prévue</h2>
-                        <p class="text-white/60 text-sm leading-relaxed max-w-md">Une mise à jour du noyau IA est prévue ce dimanche à 02:00 UTC. Le service Générateur IA sera indisponible pendant 30 minutes.</p>
-                        <div class="flex gap-4">
-                             <button class="bg-white text-gray-900 px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all">En savoir plus</button>
-                             <button class="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all">Ignorer</button>
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6 lg:space-y-8">
+                <!-- Quick Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-users text-xl"></i>
                         </div>
-                     </div>
-                     <div class="w-32 h-32 bg-white/5 rounded-[2rem] flex items-center justify-center border border-white/10 shrink-0">
-                          <i class="fa-solid fa-bolt-lightning text-6xl text-emerald-500 animate-pulse"></i>
-                     </div>
-                 </div>
-
-                 <div class="bg-white rounded-[3rem] p-12 border border-gray-100 shadow-sm">
-                    <h3 class="text-xl font-black text-gray-900 tracking-tighter uppercase italic leading-none mb-8">Activités Récentes</h3>
-                    <div class="space-y-6">
-                         <div class="flex items-center justify-between py-6 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-all px-4 rounded-2xl">
-                              <div class="flex items-center gap-6">
-                                   <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500">
-                                        <i class="fa-solid fa-plus text-xl"></i>
-                                   </div>
-                                   <div>
-                                        <p class="text-sm font-black text-gray-800 uppercase italic leading-none mb-1">Nouveau Département : CyberSécurité</p>
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-none">Créé par l'admin • Il y a 2 jours</p>
-                                   </div>
-                              </div>
-                              <button class="text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:underline px-4 py-2 bg-emerald-50 rounded-xl">Edit</button>
-                         </div>
-                         <div class="flex items-center justify-between py-6 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-all px-4 rounded-2xl">
-                              <div class="flex items-center gap-6">
-                                   <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500">
-                                        <i class="fa-solid fa-user-plus text-xl"></i>
-                                   </div>
-                                   <div>
-                                        <p class="text-sm font-black text-gray-800 uppercase italic leading-none mb-1">Nouveau Chef : Dr. Alan Turing</p>
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-none">Assigné au Dept Informatique • Il y a 3 jours</p>
-                                   </div>
-                              </div>
-                              <button class="text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:underline px-4 py-2 bg-emerald-50 rounded-xl">Edit</button>
-                         </div>
+                        <h3 class="text-3xl font-black text-gray-900 dark:text-slate-100 leading-none">12,450</h3>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Utilisateurs Actifs</p>
                     </div>
-                 </div>
-            </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-university text-xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-black text-gray-900 dark:text-slate-100 leading-none">24</h3>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Départements</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                        <div class="w-12 h-12 bg-amber-50 dark:bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-server text-xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-black text-gray-900 dark:text-slate-100 leading-none">99.9%</h3>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Uptime Serveur</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+                        <div class="w-12 h-12 bg-rose-50 dark:bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-black text-gray-900 dark:text-slate-100 leading-none">0</h3>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Alertes Sécurité</p>
+                    </div>
+                </div>
 
-            <!-- Content Area (Departments) placeholder -->
-            <div x-show="activeTab === 'departments'" class="p-12 text-center">
-                 <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mx-auto mb-6">
-                      <i class="fa-solid fa-building text-4xl"></i>
-                 </div>
-                 <h3 class="text-2xl font-black text-gray-900 tracking-tighter uppercase italic leading-none mb-2">Gestion des Départements</h3>
-                 <p class="text-sm text-gray-400 font-bold uppercase tracking-widest">Section en cours de chargement...</p>
+                <!-- Recent Activities Table -->
+                <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 p-6 lg:p-8 shadow-sm">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-xl lg:text-2xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter">Journal d'Audit</h2>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-widest">Dernières actions administratives</p>
+                        </div>
+                        <button class="px-6 py-3 bg-gray-900 dark:bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest italic hover:bg-emerald-500 transition-all">Exporter PDF</button>
+                    </div>
+                    <div class="overflow-x-auto no-scrollbar">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-[0.2em] border-b border-gray-50 dark:border-slate-800/50">
+                                    <th class="pb-4">Administrateur</th>
+                                    <th class="pb-4">Action</th>
+                                    <th class="pb-4">Cible</th>
+                                    <th class="pb-4">Date</th>
+                                    <th class="pb-4 text-right">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm font-bold text-gray-600 dark:text-slate-300">
+                                <tr class="border-b border-gray-50 dark:border-slate-800/50">
+                                    <td class="py-6 flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs">JD</div>
+                                        <span>John Doe</span>
+                                    </td>
+                                    <td class="py-6 italic">Mise à jour rôles</td>
+                                    <td class="py-6">Dep. Info</td>
+                                    <td class="py-6 text-gray-400 uppercase text-[10px]">Aujourd'hui, 14:20</td>
+                                    <td class="py-6 text-right"><span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-black tracking-widest uppercase italic">Succès</span></td>
+                                </tr>
+                                <tr class="border-b border-gray-50 dark:border-slate-800/50">
+                                    <td class="py-6 flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs">MS</div>
+                                        <span>Marc Simon</span>
+                                    </td>
+                                    <td class="py-6 italic">Nouveau compte</td>
+                                    <td class="py-6">Admin Finance</td>
+                                    <td class="py-6 text-gray-400 uppercase text-[10px]">Hier, 09:15</td>
+                                    <td class="py-6 text-right"><span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-black tracking-widest uppercase italic">Succès</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
         </main>
     </div>
 
+    <!-- Sidebar Script -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        close.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
 </body>
 </html>

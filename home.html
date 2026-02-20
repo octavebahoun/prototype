@@ -1,606 +1,280 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="fr text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academix</title>
+    <title>Academix - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F3F4F6;
-        }
-
-        .sidebar-item-active {
-            color: #10B981;
-            position: relative;
-        }
-
-        .sidebar-item-active::before {
-            content: '';
-            position: absolute;
-            left: -16px;
-            top: 25%;
-            height: 50%;
-            width: 4px;
-            background-color: #10B981;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .card-green {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        }
-
-        .card-blue {
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-        }
-
-        .card-purple {
-            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-        }
-
-        .card-orange {
-            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active { color: #10B981; position: relative; }
+        .sidebar-item-active::before { content: ''; position: absolute; left: -16px; top: 25%; height: 50%; width: 4px; background-color: #10B981; border-radius: 0 4px 4px 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .card-green { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        .card-blue { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); }
+        .card-purple { background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); }
+        .card-orange { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); }
     </style>
 </head>
-
-<body class="bg-[#F8FAFC]">
-
-    <div class="flex h-screen overflow-hidden">
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium">
+    <div class="flex h-screen overflow-hidden relative">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
         <!-- Sidebar -->
-        <aside class="w-20 lg:w-64 bg-white border-r border-gray-100 flex flex-col transition-all duration-300">
-            <div class="p-8 flex items-center gap-2 relative">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
                 <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
-                <div class="text-[#10B981] text-3xl font-extrabold flex items-center tracking-tight">
-                    <span class="lg:block hidden">Academix</span>
-                    <span class="lg:hidden block">A.</span>
-                </div>
+                <div class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
             </div>
-
             <nav class="flex-1 px-4 mt-4 space-y-1">
-                <a href="home.html" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active group">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-house text-lg"></i>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Dashboard</span>
+                <a href="home.html" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-house text-lg font-bold"></i>
+                    <span class="text-sm">Dashboard</span>
                 </a>
-                <a href="ai_upload.html"
-                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div
-                        class="w-5 h-5 flex items-center justify-center relative transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-envelope text-lg"></i>
-                        <span
-                            class="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">3</span>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Courses</span>
+                <a href="sessions.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    <span class="text-sm">Sessions</span>
                 </a>
-                <a href="grades.html"
-                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-tv text-lg"></i>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Notes</span>
+                <a href="grades.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                    <span class="text-sm">Notes</span>
                 </a>
-                <a href="profile.html"
-                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-user-group text-lg"></i>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Profile</span>
+                <a href="calendar.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-calendar-days text-lg"></i>
+                    <span class="text-sm">Emploie du temps</span>
                 </a>
-                <a href="calendar.html"
-                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-folder text-lg"></i>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Emploie du Temps</span>
+                <a href="collab_chat.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-comments text-lg"></i>
+                    <span class="text-sm">Co-Working</span>
+                </a>
+                <a href="ai_upload.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-brain text-lg"></i>
+                    <span class="text-sm">AI Revision</span>
+                </a>
+                <a href="profile.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-user text-lg"></i>
+                    <span class="text-sm">Profil</span>
                 </a>
             </nav>
-
-            <div class="mt-auto px-4 pb-8 space-y-1">
-                <a href="#"
-                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
-                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
-                        <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
-                    </div>
-                    <span class="font-semibold text-sm lg:block hidden">Logout</span>
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                    <span class="text-sm">Déconnexion</span>
                 </a>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-8 no-scrollbar">
-
-            <!-- Top Bar -->
-            <header class="flex justify-between items-center mb-8">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Good Morning, Sophie! 👋</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="relative">
-                        <i
-                            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" placeholder="Search courses or articles..."
-                            class="pl-10 pr-4 py-2 bg-white border border-gray-100 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-green-500/20 text-sm">
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <!-- Top Navigation (Mobile/Desktop) -->
+            <header class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4">
+                        <button id="sidebar-toggle" class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all"><i class="fa-solid fa-bars-staggered"></i></button>
+                        <div>
+                            <h1 class="text-lg lg:text-3xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">Bon retour, Sophie !</h1>
+                            <p class="hidden sm:block text-xs font-black text-emerald-500 uppercase tracking-widest mt-1">S2 • GÉNIE ÉLECTRIQUE ET INFORMATIQUE</p>
+                        </div>
                     </div>
-                    <button
-                        class="w-10 h-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center relative">
-                        <i class="fa-solid fa-bell text-gray-500"></i>
-                        <span
-                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
-                    <div class="flex items-center gap-2 bg-white p-1 pr-3 rounded-full border border-gray-100">
-                        <img src="https://ui-avatars.com/api/?name=Mahmud+Ali&background=random" alt="User"
-                            class="w-8 h-8 rounded-full">
+                    <div class="flex items-center gap-3">
+                        <button id="theme-toggle" class="w-10 lg:w-12 h-10 lg:h-12 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl lg:rounded-2xl flex items-center justify-center text-gray-500 dark:text-slate-400 hover:text-emerald-500 transition-all shadow-sm">
+                            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon"></i>
+                            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                        </button>
+                        <div class="w-10 lg:w-12 h-10 lg:h-12 bg-emerald-500 rounded-xl lg:rounded-2xl flex items-center justify-center text-white font-black italic shadow-lg shadow-emerald-500/20">SA</div>
                     </div>
                 </div>
             </header>
 
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div
-                    class="card-green p-6 rounded-3xl text-white shadow-lg shadow-green-500/20 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-4">
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6 lg:space-y-12">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
+                    <div class="card-green p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] text-white shadow-xl shadow-emerald-500/20 relative overflow-hidden flex flex-col justify-between h-48 lg:h-56">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 italic">Moyenne Générale</span>
+                            <div class="bg-white/20 p-2 lg:p-3 rounded-xl lg:rounded-2xl backdrop-blur-md"><i class="fa-solid fa-star"></i></div>
+                        </div>
                         <div>
-                            <p class="text-sm opacity-80">Moyenne</p>
-                            <h2 class="text-3xl font-bold mt-1">14,50</h2>
-                        </div>
-                        <div class="bg-white/20 p-2 rounded-lg">
-                            <i class="fa-solid fa-book-open"></i>
+                            <div class="text-4xl lg:text-5xl font-black italic mb-1 leading-none">16.42</div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Top 3% de la promo</p>
                         </div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/20 flex justify-between items-center text-[11px]">
-                        <span>Filiere</span>
-                        <span class="font-bold underline">GEI/IT</span>
-                    </div>
-                </div>
-
-                <div class="card-blue p-6 rounded-3xl text-white shadow-lg shadow-blue-500/20 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-4">
+                    <!-- Reuse for other stats -->
+                    <div class="card-blue p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] text-white shadow-xl shadow-blue-500/20 relative overflow-hidden flex flex-col justify-between h-48 lg:h-56">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 italic">Position Classe</span>
+                            <div class="bg-white/20 p-2 lg:p-3 rounded-xl lg:rounded-2xl backdrop-blur-md"><i class="fa-solid fa-trophy"></i></div>
+                        </div>
                         <div>
-                            <p class="text-sm opacity-80">Mention</p>
-                            <h2 class="text-3xl font-bold mt-1">Etudiant Passable</h2>
-                        </div>
-                        <div class="bg-white/20 p-2 rounded-lg">
-                            <i class="fa-solid fa-chalkboard-user"></i>
+                            <div class="text-4xl lg:text-5xl font-black italic mb-1 leading-none">2<span class="text-xl">ème</span></div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Rang maintenu</p>
                         </div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-white/20 flex justify-between items-center text-[11px]">
-                        <span>Taux de régression</span>
-                        <span class="font-bold underline">40%</span>
-                    </div>
-                </div>
-
-                <div
-                    class="card-purple p-6 rounded-3xl text-white shadow-lg shadow-purple-500/20 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-4">
+                    <div class="card-purple p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] text-white shadow-xl shadow-purple-500/20 relative overflow-hidden flex flex-col justify-between h-48 lg:h-56">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 italic">Absences</span>
+                            <div class="bg-white/20 p-2 lg:p-3 rounded-xl lg:rounded-2xl backdrop-blur-md"><i class="fa-solid fa-clock"></i></div>
+                        </div>
                         <div>
-                            <p class="text-sm opacity-80">Total Taches</p>
-                            <h2 class="text-3xl font-bold mt-1">09</h2>
-                        </div>
-                        <div class="bg-white/20 p-2 rounded-lg">
-                            <i class="fa-solid fa-calendar-days"></i>
+                            <div class="text-4xl lg:text-5xl font-black italic mb-1 leading-none">02</div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Heures justifiées</p>
                         </div>
                     </div>
-                    <div class="mt-2 space-y-1 text-[11px]">
-                        <div class="flex justify-between"><span>Cours</span> <span class="font-bold">2</span></div>
-                        <div class="flex justify-between"><span>Taches</span> <span class="font-bold">5</span></div>
-                        <div class="flex justify-between"><span>Projets</span> <span class="font-bold">3</span>
+                    <div class="card-orange p-6 lg:p-8 rounded-[2rem] lg:rounded-[3rem] text-white shadow-xl shadow-orange-500/20 relative overflow-hidden flex flex-col justify-between h-48 lg:h-56">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 italic">Crédits ECTS</span>
+                            <div class="bg-white/20 p-2 lg:p-3 rounded-xl lg:rounded-2xl backdrop-blur-md"><i class="fa-solid fa-award"></i></div>
+                        </div>
+                        <div>
+                            <div class="text-4xl lg:text-5xl font-black italic mb-1 leading-none">28</div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Sur 30 validés</p>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    class="card-orange p-6 rounded-3xl text-white shadow-lg shadow-orange-500/20 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-sm opacity-80">Plan</p>
-                            <h2 class="text-3xl font-bold mt-1">Basic</h2>
-                        </div>
-                        <div class="bg-white/20 p-2 rounded-lg text-xl">
-                            <i class="fa-solid fa-play"></i>
+                <!-- Main Grid Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="bg-white dark:bg-slate-900 rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-10 border border-gray-100 dark:border-slate-800 shadow-xl shadow-gray-100/50 dark:shadow-none">
+                            <div class="flex justify-between items-center mb-10">
+                                <div>
+                                    <h2 class="text-xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter">Évolution Mensuelle</h2>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Performance académique globale</p>
+                                </div>
+                                <select class="bg-gray-50 dark:bg-slate-800 border-none rounded-xl text-xs font-black uppercase px-4 py-2 italic text-gray-500"><option>Semestre 2</option></select>
+                            </div>
+                            <div class="h-[250px] lg:h-[350px] w-full">
+                                <canvas id="mainChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-4 flex flex-col items-end">
-                        <a href="#" class="text-[10px] underline mb-1">See Details</a>
-                        <div class="bg-white/10 w-full p-2 rounded-lg flex justify-between items-center text-[11px]">
-                            <span>Expires In</span>
-                            <span class="font-bold">01/05/2024</span>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-gray-900 dark:bg-emerald-500 p-8 lg:p-10 rounded-[2rem] lg:rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
+                            <div class="relative z-10">
+                                <span class="bg-white/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full backdrop-blur-md">Annonce</span>
+                                <h3 class="text-2xl font-black italic uppercase leading-none mt-6 mb-4">Examens Mi-Parcours</h3>
+                                <p class="text-sm font-medium opacity-70 leading-relaxed mb-8">Les examens de mi-parcours commencent le 15 Mars. Préparez vos révisions avec notre assistant IA.</p>
+                                <a href="ai_upload.html" class="inline-block px-8 py-4 bg-emerald-500 dark:bg-gray-900 text-white dark:text-emerald-400 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-black/20">Réviser Maintenant</a>
+                            </div>
+                            <i class="fa-solid fa-bolt absolute top-10 -right-10 text-[15rem] text-white/5 -rotate-12"></i>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Section Principale (Grille ou Colonne) -->
-                <div class="lg:col-span-4 space-y-8">
-
-                    <!-- Section Matières & Tâches -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-100 h-fit relative shadow-sm">
-                        <!-- Ligne décorative -->
-                        <div class="absolute right-0 top-1/4 w-1 h-16 bg-emerald-500 rounded-l-full"></div>
-
-                        <!-- En-tête de la section -->
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold text-gray-800">Matières & Tâches</h3>
-                            <div class="flex gap-4 text-xs font-medium text-gray-400">
-                                <a href="#" class="text-emerald-500 border-b-2 border-emerald-500 pb-1">Toutes</a>
-                                <a href="#" class="hover:text-gray-600 transition-colors py-1">À faire</a>
-                                <a href="#" class="hover:text-gray-600 transition-colors py-1">Terminées</a>
-                            </div>
-                        </div>
-
-                        <!-- Tableau -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left whitespace-nowrap">
-                                <!-- Titres des colonnes -->
-                                <thead>
-                                    <tr class="text-xs uppercase text-gray-400 border-b border-gray-100">
-                                        <th class="pb-4 font-medium px-2">Matière</th>
-                                        <th class="pb-4 font-medium px-2">Heures </th>
-                                        <th class="pb-4 font-medium px-2">Tâche</th>
-                                        <th class="pb-4 font-medium px-2">Contenu</th>
-                                        <th class="pb-4 font-medium px-2 text-right">Durée Tâche</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-50">
-
-                                    <!-- Ligne 1 -->
-                                    <tr class="group hover:bg-gray-50/50 transition-colors">
-                                        <td class="py-4 px-2">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center overflow-hidden shrink-0">
-                                                    <img src="https://ui-avatars.com/api/?name=Math&background=4285F4&color=fff"
-                                                        alt="Mathématiques">
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-gray-800 text-sm">Mathématiques</p>
-                                                    <p class="text-xs text-gray-400">Algèbre Linéaire</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-500 text-sm font-medium">10h 00m</td>
-                                        <td class="py-4 px-2">
-                                            <span
-                                                class="text-blue-600 text-xs font-bold px-3 py-1 bg-blue-50 rounded-md border border-blue-100">Cours</span>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-600 text-sm max-w-[200px] truncate">
-                                            Résolution de systèmes d'équations et calcul de matrices.
-                                        </td>
-                                        <td class="py-4 px-2 text-right">
-                                            <span
-                                                class="text-gray-700 font-semibold text-sm bg-gray-100 px-3 py-1.5 rounded-full">
-                                                <i class="fa-regular fa-clock text-gray-400 mr-1"></i> 2h 30m
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Ligne 2 -->
-                                    <tr class="group hover:bg-gray-50/50 transition-colors">
-                                        <td class="py-4 px-2">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center overflow-hidden shrink-0">
-                                                    <img src="https://ui-avatars.com/api/?name=Dev+Web&background=FF8A65&color=fff"
-                                                        alt="Développement Web">
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-gray-800 text-sm">Développement Web</p>
-                                                    <p class="text-xs text-gray-400">Frontend React</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-500 text-sm font-medium">16h 00m</td>
-                                        <td class="py-4 px-2">
-                                            <span
-                                                class="text-orange-600 text-xs font-bold px-3 py-1 bg-orange-50 rounded-md border border-orange-100">Projet</span>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-600 text-sm max-w-[200px] truncate">
-                                            Création d'un composant de tableau de bord avec Tailwind.
-                                        </td>
-                                        <td class="py-4 px-2 text-right">
-                                            <span
-                                                class="text-gray-700 font-semibold text-sm bg-gray-100 px-3 py-1.5 rounded-full">
-                                                <i class="fa-regular fa-clock text-gray-400 mr-1"></i> 4h 00m
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Ligne 3 -->
-                                    <tr class="group hover:bg-gray-50/50 transition-colors">
-                                        <td class="py-4 px-2">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center overflow-hidden shrink-0">
-                                                    <img src="https://ui-avatars.com/api/?name=UI+UX&background=9C27B0&color=fff"
-                                                        alt="UI/UX Design">
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-gray-800 text-sm">UI/UX Design</p>
-                                                    <p class="text-xs text-gray-400">Maquettage Figma</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-500 text-sm font-medium">19h 00m</td>
-                                        <td class="py-4 px-2">
-                                            <span
-                                                class="text-purple-600 text-xs font-bold px-3 py-1 bg-purple-50 rounded-md border border-purple-100">Recherche</span>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-600 text-sm max-w-[200px] truncate">
-                                            Analyse des personas et création de wireframes.
-                                        </td>
-                                        <td class="py-4 px-2 text-right">
-                                            <span
-                                                class="text-gray-700 font-semibold text-sm bg-gray-100 px-3 py-1.5 rounded-full">
-                                                <i class="fa-regular fa-clock text-gray-400 mr-1"></i> 1h 45m
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <!-- Ligne 4 -->
-                                    <tr class="group hover:bg-gray-50/50 transition-colors">
-                                        <td class="py-4 px-2">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center overflow-hidden shrink-0">
-                                                    <img src="https://ui-avatars.com/api/?name=IFI&background=FFA500&color=fff"
-                                                        alt="Informatique Industrielle">
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-gray-800 text-sm">Informatique Industrielle
-                                                    </p>
-                                                    <p class="text-xs text-gray-400">IFI</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-500 text-sm font-medium">19h 00m</td>
-                                        <td class="py-4 px-2">
-                                            <span
-                                                class="text-purple-600 text-xs font-bold px-3 py-1 bg-purple-50 rounded-md border border-purple-100">Cours</span>
-                                        </td>
-                                        <td class="py-4 px-2 text-gray-600 text-sm max-w-[200px] truncate">
-                                            Cours d'informatique industrielle et de systèmes embarqués.
-                                        </td>
-                                        <td class="py-4 px-2 text-right">
-                                            <span
-                                                class="text-gray-700 font-semibold text-sm bg-gray-100 px-3 py-1.5 rounded-full">
-                                                <i class="fa-regular fa-clock text-gray-400 mr-1"></i> 2h 45m
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Section Mes Notes (Recent Participation) -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
-                        <!-- Décoration subtile -->
-                        <div
-                            class="absolute left-0 top-0 w-24 h-24 bg-blue-50/50 rounded-full -translate-x-12 -translate-y-12">
-                        </div>
-
-                        <div class="flex justify-between items-center mb-6 relative">
-                            <h3 class="text-xl font-bold text-gray-800">Mes notes</h3>
-                            <button class="text-xs text-gray-400 hover:text-blue-500 transition-colors font-medium">Voir
-                                le
-                                bulletin</button>
-                        </div>
-
-                        <div class="space-y-6 relative">
-                            <!-- Note 1 -->
-                            <div
-                                class="flex items-center justify-between group p-3 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                <div class="flex items-center gap-4">
-                                    <img src="https://ui-avatars.com/api/?name=POO+Java&background=4F46E5&color=fff"
-                                        alt="Avatar" class="w-10 h-10 rounded-xl ring-2 ring-gray-50">
-                                    <div class="flex flex-col">
-                                        <p class="font-bold text-gray-800 text-sm">POO Java</p>
-                                        <p class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">
-                                            SID: 12345678</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-black text-gray-800">13<span
-                                            class="text-xs text-gray-400 font-medium">/20</span></p>
-                                </div>
-                            </div>
-
-                            <!-- Note 2 -->
-                            <div
-                                class="flex items-center justify-between group p-3 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                <div class="flex items-center gap-4">
-                                    <img src="https://ui-avatars.com/api/?name=Chimie&background=10B981&color=fff"
-                                        alt="Avatar" class="w-10 h-10 rounded-xl ring-2 ring-gray-50">
-                                    <div class="flex flex-col">
-                                        <p class="font-bold text-gray-800 text-sm">Chimie</p>
-                                        <p class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">
-                                            SID: 12345678</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-black text-emerald-600">08<span
-                                            class="text-xs text-gray-400 font-medium">/10</span></p>
-                                </div>
-                            </div>
-
-                            <!-- Note 3 -->
-                            <div
-                                class="flex items-center justify-between group p-3 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                <div class="flex items-center gap-4">
-                                    <img src="https://ui-avatars.com/api/?name=Anglais+Technique&background=F59E0B&color=fff"
-                                        alt="Avatar" class="w-10 h-10 rounded-xl ring-2 ring-gray-50">
-                                    <div class="flex flex-col">
-                                        <p class="font-bold text-gray-800 text-sm">Anglais Technique</p>
-                                        <p class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">
-                                            SID: 12345678</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-black text-rose-500">08<span
-                                            class="text-xs text-gray-400 font-medium">/20</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column: Charts -->
-            <!-- <div class="space-y-8"> -->
-
-            <!-- Students Participation Chart -->
-            <!-- <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-bold text-gray-800">Evolution des notes </h3>
-                            <div class="text-[10px] text-blue-500 font-bold flex items-center gap-1">
-                                Show: <span class="underline">Monthly</span>
-                            </div>
-                        </div>
-                        <div class="h-48">
-                            <canvas id="participationChart"></canvas>
-                        </div>
-                    </div> -->
-
-            <!-- Total Improvement Donut Chart
-                    <div class="bg-white p-8 rounded-3xl border border-gray-100">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-bold text-gray-800">Total Improvement</h3>
-                            <div class="text-[10px] text-blue-500 font-bold flex items-center gap-1">
-                                Show: <span class="underline">This month</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-1/2 h-32 relative">
-                                <canvas id="improvementChart"></canvas>
-                            </div>
-                            <div class="w-1/2 pl-6 space-y-2">
-                                <div class="flex items-center gap-2 text-[10px]">
-                                    <div class="w-2 h-2 rounded-full bg-orange-400"></div>
-                                    <span class="text-gray-400">Typography</span>
-                                    <span class="ml-auto font-bold">35%</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-[10px]">
-                                    <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-                                    <span class="text-gray-400">Color</span>
-                                    <span class="ml-auto font-bold">5%</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-[10px]">
-                                    <div class="w-2 h-2 rounded-full bg-blue-400"></div>
-                                    <span class="text-gray-400">UI Course</span>
-                                    <span class="ml-auto font-bold">10%</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-[10px]">
-                                    <div class="w-2 h-2 rounded-full bg-purple-400"></div>
-                                    <span class="text-gray-400">UX Course</span>
-                                    <span class="ml-auto font-bold">20%</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-[10px]">
-                                    <div class="w-2 h-2 rounded-full bg-pink-400"></div>
-                                    <span class="text-gray-400">Development</span>
-                                    <span class="ml-auto font-bold">30%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-            <!-- </div> -->
-
-    </div>
-
-    </main>
+        </main>
     </div>
 
     <script>
-        // Participation Chart
-        const ctxP = document.getElementById('participationChart').getContext('2d');
-        const participationChart = new Chart(ctxP, {
+        // Sidebar scripts
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        close.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        // Chart script
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['1 Dec', '8 Dec', '16 Dec', '31 Dec'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                 datasets: [{
-                    label: 'Participation',
-                    data: [50, 100, 170, 70, 150, 145],
+                    label: 'Moyenne',
+                    data: [14.5, 15.8, 15.2, 16.5, 16.0, 16.42],
                     borderColor: '#10B981',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#10B981',
-                    pointBorderWidth: 2,
-                    pointRadius: [0, 0, 0, 0, 5, 0],
+                    borderWidth: 6,
                     tension: 0.4,
                     fill: true,
-                    backgroundColor: (ctx) => {
-                        const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
-                        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
-                        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
-                        return gradient;
-                    },
+                    backgroundColor: gradient,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#10B981',
+                    pointBorderWidth: 4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
                 }]
             },
             options: {
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#374151',
-                        padding: 8,
-                        displayColors: false,
-                        callbacks: {
-                            label: (context) => context.raw
-                        }
-                    }
-                },
-                scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#9CA3AF' } },
-                    y: {
-                        beginAtZero: true,
-                        max: 200,
-                        ticks: { stepSize: 50, font: { size: 10 }, color: '#9CA3AF' },
-                        grid: { borderDash: [2, 4], color: '#E5E7EB', drawBorder: false }
-                    }
-                },
+                responsive: true,
                 maintainAspectRatio: false,
-                elements: {
-                    line: {
-                        borderCapStyle: 'round'
-                    }
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
+                    x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } }
                 }
             }
         });
 
-        // Improvement Chart
-        const ctxI = document.getElementById('improvementChart').getContext('2d');
-        const improvementChart = new Chart(ctxI, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [35, 5, 10, 20, 30],
-                    backgroundColor: ['#F97316', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                cutout: '70%',
-                plugins: { legend: { display: false } },
-                maintainAspectRatio: false
+        // Theme Toggle script
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+        
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            lightIcon.classList.remove('hidden'); darkIcon.classList.add('hidden');
+        } else {
+            lightIcon.classList.add('hidden'); darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden');
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                }
             }
         });
     </script>
 </body>
-
 </html>

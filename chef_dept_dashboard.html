@@ -1,212 +1,153 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="fr" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academix - Chef de Département</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC;
-        }
-
-        .chef-sidebar-active {
-            color: #10B981;
-            background-color: #f0fdf4;
-            position: relative;
-        }
-
-        .chef-sidebar-active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 25%;
-            height: 50%;
-            width: 4px;
-            background-color: #10B981;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active { color: #10B981; position: relative; }
+        .sidebar-item-active::before { content: ''; position: absolute; left: -16px; top: 25%; height: 50%; width: 4px; background-color: #10B981; border-radius: 0 4px 4px 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium overflow-hidden">
+    <div class="flex h-screen relative">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-<body class="bg-[#F8FAFC]" x-data="{ activeTab: 'overview' }">
-
-    <div class="flex h-screen overflow-hidden">
-
-        <!-- Sidebar -->
-        <aside class="w-24 lg:w-72 bg-white border-r border-gray-100 flex flex-col transition-all duration-300">
-            <div class="p-10 flex flex-col items-center lg:items-start gap-4">
-                <div class="w-12 h-12 bg-white border-2 border-emerald-500 rounded-2xl flex items-center justify-center text-emerald-500 shadow-sm">
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
-                </div>
-                <div class="lg:block hidden">
-                    <h1 class="text-xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">Academix <span class="text-emerald-500 font-normal">Chef</span></h1>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1">Dept. Informatique</p>
-                </div>
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i class="fa-solid fa-xmark text-2xl"></i></button>
             </div>
-
-            <nav class="flex-1 px-6 mt-8 space-y-2">
-                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'chef-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <i class="fa-solid fa-house-chimney text-lg transition-transform group-hover:scale-110"></i>
-                    <span class="font-bold text-sm lg:block hidden">Vue d'ensemble</span>
-                </button>
-                <button @click="activeTab = 'filieres'" :class="activeTab === 'filieres' ? 'chef-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <i class="fa-solid fa-layer-group text-lg transition-transform group-hover:scale-110"></i>
-                    <span class="font-bold text-sm lg:block hidden">Filières</span>
-                </button>
-                <button @click="activeTab = 'students'" :class="activeTab === 'students' ? 'chef-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <i class="fa-solid fa-user-graduate text-lg transition-transform group-hover:scale-110"></i>
-                    <span class="font-bold text-sm lg:block hidden">Étudiants</span>
-                </button>
-                <button @click="activeTab = 'grades'" :class="activeTab === 'grades' ? 'chef-sidebar-active' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all group">
-                    <i class="fa-solid fa-poll text-lg transition-transform group-hover:scale-110"></i>
-                    <span class="font-bold text-sm lg:block hidden">Saisie de Notes</span>
-                </button>
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <div class="px-4 py-2 text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest italic">Département Control</div>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-chart-simple text-lg"></i>
+                    <span class="text-sm">Statistiques</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                    <span class="text-sm">Enseignants</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-user-graduate text-lg"></i>
+                    <span class="text-sm">Étudiants</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-book-open text-lg"></i>
+                    <span class="text-sm">Modules</span>
+                </a>
             </nav>
-
-            <div class="px-8 pb-10">
-                 <button class="w-full bg-gray-900 text-white p-5 rounded-3xl flex items-center justify-center gap-3 hover:bg-emerald-500 transition-all shadow-xl shadow-gray-900/10">
-                      <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                      <span class="font-black text-[10px] uppercase tracking-widest lg:block hidden">Déconnexion</span>
-                 </button>
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                    <span class="text-sm">Déconnexion</span>
+                </a>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-12 no-scrollbar">
-
-            <!-- Top Bar -->
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">Console Chef Dept.</h1>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Bienvenue, Dr. Bernard</p>
-                </div>
-                <div class="flex gap-4">
-                     <button class="bg-emerald-500 text-white px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all">Importer données</button>
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <header class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4">
+                        <button id="sidebar-toggle" class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all"><i class="fa-solid fa-bars-staggered"></i></button>
+                        <div>
+                            <h1 class="text-lg lg:text-3xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">Management Board</h1>
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Département Informatique</p>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                    <div class="absolute -right-8 -bottom-8 text-emerald-500/5 rotate-12 transition-transform group-hover:scale-125">
-                         <i class="fa-solid fa-users text-9xl"></i>
-                    </div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Effectif Total</p>
-                    <div class="text-5xl font-black text-gray-900 tracking-tighter italic">2,450</div>
-                    <p class="text-[10px] text-emerald-500 font-bold mt-2 uppercase tracking-widest">+12% cette session</p>
-                </div>
-                <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                    <div class="absolute -right-8 -bottom-8 text-blue-500/5 rotate-12 transition-transform group-hover:scale-125">
-                         <i class="fa-solid fa-book-open text-9xl"></i>
-                    </div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Cours Ouverts</p>
-                    <div class="text-5xl font-black text-gray-900 tracking-tighter italic">84</div>
-                    <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase tracking-widest italic">12 en attente de prof</p>
-                </div>
-                <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-                    <div class="absolute -right-8 -bottom-8 text-purple-500/5 rotate-12 transition-transform group-hover:scale-125">
-                         <i class="fa-solid fa-check-double text-9xl"></i>
-                    </div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Taux Réussite</p>
-                    <div class="text-5xl font-black text-gray-900 tracking-tighter italic">78%</div>
-                    <p class="text-[10px] text-emerald-500 font-bold mt-2 uppercase tracking-widest">+2.5% vs N-1</p>
-                </div>
-            </div>
-
-            <!-- Chart & Tasks -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                 <div class="bg-white p-12 rounded-[4rem] border border-gray-100 shadow-sm">
-                      <div class="flex justify-between items-center mb-10">
-                           <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest italic">Performances par Filière</h3>
-                      </div>
-                      <canvas id="chefChart" height="250"></canvas>
-                 </div>
-                 <div class="bg-gray-900 p-12 rounded-[4rem] text-white overflow-hidden relative shadow-2xl">
-                     <div class="absolute -right-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
-                     <h3 class="text-sm font-black text-emerald-400 uppercase tracking-widest mb-10">Filières Populaires</h3>
-                     <div class="space-y-8 relative z-10">
-                          <div class="flex items-center gap-6">
-                               <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-emerald-500 border border-white/10 shrink-0 font-black italic">L3</div>
-                               <div class="flex-1">
-                                    <div class="flex justify-between mb-2">
-                                         <p class="text-[10px] font-black uppercase tracking-widest">Informatique (L3)</p>
-                                         <p class="text-xs font-black italic text-emerald-400">450 Étudiants</p>
-                                    </div>
-                                    <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                         <div class="h-full bg-emerald-500 w-[95%]"></div>
-                                    </div>
-                               </div>
-                          </div>
-                          <div class="flex items-center gap-6">
-                               <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-blue-400 border border-white/10 shrink-0 font-black italic">M1</div>
-                               <div class="flex-1">
-                                    <div class="flex justify-between mb-2">
-                                         <p class="text-[10px] font-black uppercase tracking-widest">Cyber-Sécuritée (M1)</p>
-                                         <p class="text-xs font-black italic text-blue-400">220 Étudiants</p>
-                                    </div>
-                                    <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                         <div class="h-full bg-blue-400 w-[70%]"></div>
-                                    </div>
-                               </div>
-                          </div>
-                          <div class="flex items-center gap-6">
-                               <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-purple-400 border border-white/10 shrink-0 font-black italic">M2</div>
-                               <div class="flex-1">
-                                    <div class="flex justify-between mb-2">
-                                         <p class="text-[10px] font-black uppercase tracking-widest">Intelligence Artificielle (M2)</p>
-                                         <p class="text-xs font-black italic text-purple-400">180 Étudiants</p>
-                                    </div>
-                                    <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                         <div class="h-full bg-purple-400 w-[60%]"></div>
-                                    </div>
-                               </div>
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6 lg:space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm">
+                          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic mb-2">Taux de réussite</p>
+                          <h3 class="text-4xl font-black text-gray-900 dark:text-slate-100 italic">82.4%</h3>
+                          <div class="mt-4 w-full bg-gray-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                               <div class="bg-emerald-500 h-full w-[82.4%]"></div>
                           </div>
                      </div>
-                 </div>
-            </div>
+                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm">
+                          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic mb-2">Enseignants actifs</p>
+                          <h3 class="text-4xl font-black text-gray-900 dark:text-slate-100 italic">45</h3>
+                          <p class="text-xs font-bold text-emerald-500 mt-2">+2 ce mois-ci</p>
+                     </div>
+                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-800 shadow-sm">
+                          <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic mb-2">Étudiants inscrits</p>
+                          <h3 class="text-4xl font-black text-gray-900 dark:text-slate-100 italic">1,240</h3>
+                          <p class="text-xs font-bold text-blue-500 mt-2">Capacité 95%</p>
+                     </div>
+                </div>
 
+                <div class="bg-gray-900 dark:bg-slate-900 p-8 lg:p-12 rounded-[3rem] text-white">
+                     <h2 class="text-2xl lg:text-3xl font-black uppercase italic tracking-tighter mb-8 italic">Répartition des Notes</h2>
+                     <div class="flex flex-col lg:flex-row items-end gap-2 lg:gap-4 h-64">
+                          <div class="flex-1 bg-emerald-500/20 hover:bg-emerald-500 transition-all rounded-t-2xl relative h-full group">
+                               <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-[60%] rounded-t-2xl"></div>
+                               <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-black opacity-0 group-hover:opacity-100 transition-opacity uppercase italic tracking-widest">Lundi</span>
+                          </div>
+                          <div class="flex-1 bg-emerald-500/20 hover:bg-emerald-500 transition-all rounded-t-2xl relative h-full group">
+                               <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-[80%] rounded-t-2xl"></div>
+                          </div>
+                          <div class="flex-1 bg-emerald-500/20 hover:bg-emerald-500 transition-all rounded-t-2xl relative h-full group">
+                               <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-[45%] rounded-t-2xl"></div>
+                          </div>
+                          <div class="flex-1 bg-emerald-500/20 hover:bg-emerald-500 transition-all rounded-t-2xl relative h-full group">
+                               <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-[95%] rounded-t-2xl"></div>
+                          </div>
+                          <div class="flex-1 bg-emerald-500/20 hover:bg-emerald-500 transition-all rounded-t-2xl relative h-full group">
+                               <div class="absolute inset-x-0 bottom-0 bg-emerald-500 h-[70%] rounded-t-2xl"></div>
+                          </div>
+                     </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        const ctx = document.getElementById('chefChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['L1', 'L2', 'L3', 'M1', 'M2'],
-                datasets: [{
-                    label: 'Moyenne par Filière',
-                    data: [13.2, 12.8, 14.5, 15.1, 15.8],
-                    backgroundColor: '#10B981',
-                    borderRadius: 12,
-                    barThickness: 30
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { display: false }, border: { display: false }, ticks: { font: { weight: '900', size: 10 } } },
-                    x: { grid: { display: false }, border: { display: false }, ticks: { font: { weight: '900', size: 10 } } }
-                }
-            }
-        });
-    </script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
 
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        close.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
 </body>
 </html>

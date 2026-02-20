@@ -1,93 +1,68 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="fr" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academix - Connexion</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-
-<body class="bg-[#F8FAFC] flex h-screen overflow-hidden">
-
-    <!-- Left: Branding -->
-    <div class="hidden lg:flex lg:w-1/2 bg-emerald-500 relative items-center justify-center p-16 overflow-hidden">
-        <!-- Abstract Shapes -->
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-48 -translate-x-24"></div>
-        
-        <div class="relative z-10 text-center text-white">
-            <div class="mb-8 inline-flex w-24 h-24 bg-white rounded-3xl items-center justify-center shadow-2xl shadow-emerald-900/20">
-                <span class="text-4xl font-black text-emerald-500 tracking-tighter italic">A.</span>
-            </div>
-            <h1 class="text-6xl font-black tracking-tighter mb-4 italic uppercase leading-none">Academix</h1>
-            <p class="text-emerald-100/70 text-xs font-black uppercase tracking-[0.4em] mb-12">Intelligence Académique</p>
-            
-            <div class="bg-white/10 p-8 rounded-[4rem] border border-white/20 backdrop-blur-md inline-block">
-                <img src="https://cdni.iconscout.com/illustration/premium/thumb/student-studying-on-laptop-illustration-download-in-svg-png-gif-file-formats--e-learning-online-education-pack-educational-illustrations-4541300.png" alt="Illustration" class="w-80 h-auto filter drop-shadow-2xl">
-            </div>
+<body class="bg-[#F8FAFC] dark:bg-slate-950 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-12">
+            <div class="text-[#10B981] text-5xl font-black tracking-tighter italic uppercase underline decoration-8 decoration-emerald-200 inline-block mb-4">Academix</div>
+            <p class="text-xs font-black text-gray-400 dark:text-slate-500 uppercase tracking-[0.3em] italic">Intelligence Collective • Succès Académique</p>
         </div>
-    </div>
 
-    <!-- Right: Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-12 bg-white relative">
-        <div class="w-full max-w-sm space-y-12">
+        <div class="bg-white dark:bg-slate-900 p-8 lg:p-12 rounded-[2.5rem] lg:rounded-[3rem] border border-gray-100 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all duration-700"></div>
             
-            <div class="text-center lg:text-left">
-                <h2 class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic mb-2">Bon retour ! 👋</h2>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-loose">Accédez à votre espace étudiant sécurisé Academix.</p>
-            </div>
-
-            <form action="home.html" class="space-y-8">
-                <div class="space-y-6">
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Identifiant Institutionnel</label>
-                        <div class="relative group">
-                            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
-                            <input type="email" placeholder="sophie.bernard@academix.edu" class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none transition-all font-semibold text-sm">
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center px-1">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mot de passe</label>
-                            <a href="#" class="text-[9px] text-emerald-500 font-black uppercase tracking-widest hover:underline">Oublié ?</a>
-                        </div>
-                        <div class="relative group">
-                            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
-                            <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none transition-all font-semibold text-sm">
-                        </div>
+            <form action="home.html" class="space-y-6 relative z-10">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest italic ml-4">Identifiant Étudiant</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 dark:text-slate-700"></i>
+                        <input type="text" placeholder="ex: 2023-XXXX" class="w-full bg-gray-50 dark:bg-slate-950 border-none rounded-2xl py-4 pl-14 pr-6 text-sm font-bold text-gray-900 dark:text-slate-100 placeholder:text-gray-300 focus:ring-2 focus:ring-emerald-500 transition-all">
                     </div>
                 </div>
 
-                <div class="space-y-4 pt-4">
-                    <button type="submit" class="w-full bg-emerald-500 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all hover:scale-[1.02] active:scale-95">
-                        S'authentifier
-                    </button>
-                    
-                    <div class="flex items-center gap-4 py-2">
-                        <div class="h-px bg-gray-100 flex-1"></div>
-                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest italic">Sécurité SSO</span>
-                        <div class="h-px bg-gray-100 flex-1"></div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest italic ml-4">Mot de passe</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 dark:text-slate-700"></i>
+                        <input type="password" placeholder="••••••••" class="w-full bg-gray-50 dark:bg-slate-950 border-none rounded-2xl py-4 pl-14 pr-6 text-sm font-bold text-gray-900 dark:text-slate-100 placeholder:text-gray-300 focus:ring-2 focus:ring-emerald-500 transition-all">
                     </div>
-
-                    <button type="button" class="w-full bg-white border border-gray-100 text-gray-600 py-4 rounded-2xl text-xs font-bold flex items-center justify-center gap-3 hover:bg-gray-50 transition-all shadow-sm">
-                        <img src="https://www.google.com/favicon.ico" class="w-4 h-4 opacity-70" alt="SSO">
-                        Continuer via Google
-                    </button>
                 </div>
+
+                <div class="flex items-center justify-between px-4">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" class="w-4 h-4 rounded border-gray-200 text-emerald-500 focus:ring-emerald-500 bg-gray-50 dark:bg-slate-800 dark:border-slate-700">
+                        <span class="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest group-hover:text-emerald-500 transition-colors">Rester connecté</span>
+                    </label>
+                    <a href="#" class="text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:underline italic">Oublié ?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-gray-900 dark:bg-emerald-500 text-white rounded-2xl py-5 font-black uppercase tracking-[0.2em] italic hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-emerald-500/10">Se Connecter</button>
             </form>
-
-            <div class="text-center pt-8">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Nouvel étudiant ? <a href="#" class="text-emerald-500 hover:underline">Créer un compte</a></p>
-            </div>
-
         </div>
-    </div>
 
+        <p class="text-center mt-12 text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">Vous n'avez pas de compte ? <a href="#" class="text-emerald-500 font-black italic hover:underline">Contactez l'administration</a></p>
+    </div>
 </body>
 </html>

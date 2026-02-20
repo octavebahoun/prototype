@@ -4,111 +4,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - UniSTUDENT</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <title>Academix - Connexion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
 
-<body class="bg-gray-50 flex h-screen overflow-hidden">
-    <!-- Left: Branding & Illustration -->
-    <div class="hidden lg:flex lg:w-1/2 bg-[#2E75B6] relative items-center justify-center p-16">
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="grid grid-cols-12 h-full gap-4 p-8">
-                <template x-for="i in 144">
-                    <div class="h-12 border-t border-l border-white/20"></div>
-                </template>
+<body class="bg-[#F8FAFC] flex h-screen overflow-hidden">
+
+    <!-- Left: Branding -->
+    <div class="hidden lg:flex lg:w-1/2 bg-emerald-500 relative items-center justify-center p-16 overflow-hidden">
+        <!-- Abstract Shapes -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-48 -translate-x-24"></div>
+        
+        <div class="relative z-10 text-center text-white">
+            <div class="mb-8 inline-flex w-24 h-24 bg-white rounded-3xl items-center justify-center shadow-2xl shadow-emerald-900/20">
+                <span class="text-4xl font-black text-emerald-500 tracking-tighter italic">A.</span>
             </div>
-        </div>
-        <div class="relative z-10 text-center text-white space-y-10">
-            <div class="space-y-4">
-                <div
-                    class="bg-white mx-auto w-24 h-24 rounded-3xl flex items-center justify-center text-[#2E75B6] shadow-2xl">
-                    <i data-lucide="graduation-cap" class="w-12 h-12"></i>
-                </div>
-                <h1 class="text-6xl font-black tracking-tighter uppercase italic leading-none">UniSTUDENT</h1>
-                <p class="text-blue-100/60 text-xs font-black uppercase tracking-[0.3em]">Portail Académique Unifié</p>
-            </div>
-            <div class="p-4 bg-white/5 rounded-[3rem] backdrop-blur-sm border border-white/10 shadow-2xl">
-                <img src="student_studying_illustration.png" alt="Etudiants"
-                    class="w-full max-w-sm mx-auto drop-shadow-2xl opacity-90">
+            <h1 class="text-6xl font-black tracking-tighter mb-4 italic uppercase leading-none">Academix</h1>
+            <p class="text-emerald-100/70 text-xs font-black uppercase tracking-[0.4em] mb-12">Intelligence Académique</p>
+            
+            <div class="bg-white/10 p-8 rounded-[4rem] border border-white/20 backdrop-blur-md inline-block">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/student-studying-on-laptop-illustration-download-in-svg-png-gif-file-formats--e-learning-online-education-pack-educational-illustrations-4541300.png" alt="Illustration" class="w-80 h-auto filter drop-shadow-2xl">
             </div>
         </div>
     </div>
 
     <!-- Right: Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-12 bg-white">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-12 bg-white relative">
         <div class="w-full max-w-sm space-y-12">
-            <div class="space-y-4 text-center lg:text-left">
-                <h2 class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic">Accès Étudiant</h2>
-                <div class="h-1 w-12 bg-[#2E75B6] rounded-full mx-auto lg:mx-0"></div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">Saisissez vos
-                    identifiants institutionnels pour continuer.</p>
+            
+            <div class="text-center lg:text-left">
+                <h2 class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic mb-2">Bon retour ! 👋</h2>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-loose">Accédez à votre espace étudiant sécurisé Academix.</p>
             </div>
 
             <form action="home.html" class="space-y-8">
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email
-                            Académique</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Identifiant Institutionnel</label>
                         <div class="relative group">
-                            <i data-lucide="mail"
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#2E75B6] transition-colors"></i>
-                            <input type="email" placeholder="s.bernard@u-admin.edu"
-                                class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] outline-none transition-all font-medium text-sm">
+                            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
+                            <input type="email" placeholder="sophie.bernard@academix.edu" class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none transition-all font-semibold text-sm">
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mot de
-                                passe</label>
-                            <a href="#"
-                                class="text-[9px] text-[#2E75B6] font-black uppercase tracking-widest hover:underline">Oublié
-                                ?</a>
+                        <div class="flex justify-between items-center px-1">
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mot de passe</label>
+                            <a href="#" class="text-[9px] text-emerald-500 font-black uppercase tracking-widest hover:underline">Oublié ?</a>
                         </div>
                         <div class="relative group">
-                            <i data-lucide="lock"
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#2E75B6] transition-colors"></i>
-                            <input type="password" placeholder="••••••••"
-                                class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-[#2E75B6] outline-none transition-all font-medium text-sm">
+                            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-emerald-500 transition-colors"></i>
+                            <input type="password" placeholder="••••••••" class="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none transition-all font-semibold text-sm">
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <button type="submit"
-                        class="w-full bg-[#2E75B6] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all">
-                        Se connecter
+                <div class="space-y-4 pt-4">
+                    <button type="submit" class="w-full bg-emerald-500 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all hover:scale-[1.02] active:scale-95">
+                        S'authentifier
                     </button>
+                    
                     <div class="flex items-center gap-4 py-2">
                         <div class="h-px bg-gray-100 flex-1"></div>
-                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest italic">Ou</span>
+                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest italic">Sécurité SSO</span>
                         <div class="h-px bg-gray-100 flex-1"></div>
                     </div>
-                    <button type="button"
-                        class="w-full bg-white text-gray-700 py-4 rounded-2xl border border-gray-100 font-bold text-xs flex items-center justify-center gap-3 hover:bg-gray-50 transition-all shadow-sm">
-                        <img src="https://www.google.com/favicon.ico"
-                            class="w-4 h-4 grayscale opacity-50 group-hover:grayscale-0" alt="">
-                        Authentification SSO
+
+                    <button type="button" class="w-full bg-white border border-gray-100 text-gray-600 py-4 rounded-2xl text-xs font-bold flex items-center justify-center gap-3 hover:bg-gray-50 transition-all shadow-sm">
+                        <img src="https://www.google.com/favicon.ico" class="w-4 h-4 opacity-70" alt="SSO">
+                        Continuer via Google
                     </button>
                 </div>
             </form>
 
-            <p class="text-center text-[10px] text-gray-300 font-medium uppercase tracking-widest">
-                Portail sécurisé v2.4.0 • &copy; 2025 UniSTUDENT Lab.
-            </p>
+            <div class="text-center pt-8">
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Nouvel étudiant ? <a href="#" class="text-emerald-500 hover:underline">Créer un compte</a></p>
+            </div>
+
         </div>
     </div>
 
-    <script>lucide.createIcons();</script>
 </body>
-
 </html>

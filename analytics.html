@@ -4,263 +4,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytique Académique - UniStudent</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <title>Academix - Statistiques</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F8FAFC;
         }
 
-        [x-cloak] {
-            display: none !important;
+        .sidebar-item-active {
+            color: #10B981;
+            position: relative;
         }
 
-        .primary-bg {
-            background-color: #2E75B6;
-        }
-
-        .primary-text {
-            color: #2E75B6;
-        }
-
-        .sidebar-active {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #FFFFFF;
+        .sidebar-item-active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: #10B981;
+            border-radius: 0 4px 4px 0;
         }
 
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 
-<body class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: true }">
-    <!-- UNIFIED SIDEBAR -->
-    <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
-        class="primary-bg text-white transition-all duration-300 flex flex-col z-20 shadow-xl">
-        <div class="p-6 flex items-center justify-between">
-            <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen">
-                <div class="bg-white p-2 rounded-lg text-[#2E75B6]">
-                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                </div>
-                <span class="font-bold text-xl tracking-tight whitespace-nowrap uppercase">UniSTUDENT</span>
-            </div>
-            <button @click="sidebarOpen = !sidebarOpen" class="hover:bg-white/10 p-1 rounded transition-colors">
-                <i data-lucide="menu"></i>
-            </button>
-        </div>
+<body class="bg-[#F8FAFC]">
 
-        <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
-            <a href="home.html"
-                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Tableau de Bord</span>
-            </a>
-            <a href="grades.html"
-                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
-                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Mes Notes</span>
-            </a>
-            <a href="calendar.html"
-                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
-                <i data-lucide="calendar" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Calendrier</span>
-            </a>
-            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
-                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Outils IA</p>
-            </div>
-            <a href="ai_upload.html"
-                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Révisions IA</span>
-            </a>
-            <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
-                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest">Social</p>
-            </div>
-            <a href="sessions.html"
-                class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-white/70 hover:text-white">
-                <i data-lucide="users" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Sessions</span>
-            </a>
-            <a href="analytics.html" class="flex items-center gap-3 px-3 py-3 rounded-lg sidebar-active transition-all">
-                <i data-lucide="trending-up" class="w-5 h-5"></i>
-                <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
-            </a>
-        </nav>
+    <div class="flex h-screen overflow-hidden">
 
-        <div class="p-4 border-t border-white/10" x-show="sidebarOpen">
-            <a href="profile.html"
-                class="bg-white/10 p-4 rounded-xl flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer">
-                <div
-                    class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm">
-                    SB</div>
-                <div class="overflow-hidden">
-                    <p class="text-xs font-bold truncate">Sophie Bernard</p>
-                    <p class="text-[10px] text-white/60">Master 1 Info</p>
-                </div>
-            </a>
-        </div>
-    </aside>
-
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- UNIFIED HEADER -->
-        <header class="bg-white h-20 px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10">
-            <div class="flex items-center gap-4">
-                <div
-                    class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-emerald-100 uppercase italic">
-                    Statistiques</div>
-                <div class="h-4 w-px bg-gray-200"></div>
-                <p class="text-sm text-gray-500 font-medium hidden md:block uppercase tracking-tight">Analyse de la
-                    progression</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <button
-                    class="bg-white text-gray-700 font-bold px-5 py-2 rounded-xl border border-gray-200 text-xs flex items-center gap-2 hover:bg-gray-50 transition-all shadow-sm">
-                    <i data-lucide="share-2" class="w-4 h-4 text-gray-400"></i> Partager
-                </button>
-            </div>
-        </header>
-
-        <div class="flex-1 overflow-y-auto no-scrollbar bg-[#F8FAFC]">
-            <!-- KPI Cards Section -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-8 mt-8">
-                <div
-                    class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-[#2E75B6]/50 transition-all">
-                    <div
-                        class="bg-blue-50 p-3 rounded-2xl text-[#2E75B6] group-hover:bg-[#2E75B6] group-hover:text-white transition-all">
-                        <i data-lucide="book-open" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p
-                            class="text-[8px] font-black text-gray-400 uppercase tracking-widest italic leading-none mb-1">
-                            Modules Validés</p>
-                        <p class="text-xl font-black text-gray-800 italic">24<span
-                                class="text-[10px] opacity-30">/32</span></p>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-emerald-500/50 transition-all">
-                    <div
-                        class="bg-emerald-50 p-3 rounded-2xl text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                        <i data-lucide="award" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p
-                            class="text-[8px] font-black text-gray-400 uppercase tracking-widest italic leading-none mb-1">
-                            Moyenne Actuelle</p>
-                        <p class="text-xl font-black text-gray-800 italic">15.42</p>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-purple-500/50 transition-all">
-                    <div
-                        class="bg-purple-50 p-3 rounded-2xl text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-all">
-                        <i data-lucide="clock" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p
-                            class="text-[8px] font-black text-gray-400 uppercase tracking-widest italic leading-none mb-1">
-                            Temps d'étude</p>
-                        <p class="text-xl font-black text-gray-800 italic">142h</p>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-amber-500/50 transition-all">
-                    <div
-                        class="bg-amber-50 p-3 rounded-2xl text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-all">
-                        <i data-lucide="trending-up" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p
-                            class="text-[8px] font-black text-gray-400 uppercase tracking-widest italic leading-none mb-1">
-                            Progression S1</p>
-                        <p class="text-xl font-black text-gray-800 italic">+12%</p>
-                    </div>
+        <!-- Sidebar -->
+        <aside class="w-20 lg:w-64 bg-white border-r border-gray-100 flex flex-col transition-all duration-300">
+            <div class="p-8 flex items-center gap-2 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div class="text-[#10B981] text-3xl font-extrabold flex items-center tracking-tight">
+                    <span class="lg:block hidden">Academix</span>
+                    <span class="lg:hidden block">A.</span>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-8">
-                <!-- Subject workload chart -->
-                <div
-                    class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-8 relative overflow-hidden group">
-                    <div
-                        class="absolute -right-12 -top-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
-                        <i data-lucide="bar-chart-2" class="w-48 h-48"></i>
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <a href="home.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-house text-lg"></i>
                     </div>
-                    <div class="flex items-center justify-between relative z-10">
-                        <h3 class="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic leading-none">
-                            Charge de Travail par Matière</h3>
-                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    <span class="font-semibold text-sm lg:block hidden">Dashboard</span>
+                </a>
+                <a href="sessions.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center relative transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-envelope text-lg"></i>
+                        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">3</span>
                     </div>
-
-                    <div class="space-y-6 relative z-10">
-                        <template
-                            x-for="(val, label) in {'Algorithmes': 85, 'NoSQL': 65, 'Génie Logiciel': 45, 'Réseaux': 90}">
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-[8px] font-black uppercase italic">
-                                    <span class="text-gray-500" x-text="label"></span>
-                                    <span class="text-[#2E75B6]" x-text="val + '%'"></span>
-                                </div>
-                                <div class="h-1.5 bg-gray-50 rounded-full overflow-hidden">
-                                    <div class="h-full bg-[#2E75B6] rounded-full transition-all duration-1000"
-                                        :style="'width: ' + val + '%'"></div>
-                                </div>
-                            </div>
-                        </template>
+                    <span class="font-semibold text-sm lg:block hidden">Courses</span>
+                </a>
+                <a href="grades.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-tv text-lg"></i>
                     </div>
+                    <span class="font-semibold text-sm lg:block hidden">Notes</span>
+                </a>
+                <a href="profile.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-user-group text-lg"></i>
+                    </div>
+                    <span class="font-semibold text-sm lg:block hidden">Profile</span>
+                </a>
+                <a href="calendar.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-folder text-lg"></i>
+                    </div>
+                    <span class="font-semibold text-sm lg:block hidden">Emploie du Temps</span>
+                </a>
+                <a href="analytics.html" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active group transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-chart-line text-lg"></i>
+                    </div>
+                    <span class="font-semibold text-sm lg:block hidden">Statistiques</span>
+                </a>
+                <div class="pt-4 pb-2 px-4 shadow-sm">
+                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Outils IA</p>
                 </div>
-
-                <!-- Time distribution circle -->
-                <div
-                    class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center justify-center space-y-8 relative overflow-hidden group">
-                    <div
-                        class="absolute -left-12 -bottom-12 opacity-[0.03] group-hover:rotate-12 transition-transform duration-700">
-                        <i data-lucide="pie-chart" class="w-48 h-48"></i>
+                 <a href="ai_upload.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                     </div>
-                    <h3
-                        class="absolute top-8 left-8 text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] italic leading-none">
-                        Répartition du Temps</h3>
+                    <span class="font-semibold text-sm lg:block hidden">Générateur IA</span>
+                </a>
+            </nav>
 
-                    <div
-                        class="relative w-48 h-48 flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
-                        <svg class="w-full h-full -rotate-90">
-                            <circle cx="96" cy="96" r="80" fill="transparent" stroke="#F1F5F9" stroke-width="14">
-                            </circle>
-                            <circle cx="96" cy="96" r="80" fill="transparent" stroke="#2E75B6" stroke-width="16"
-                                stroke-dasharray="502" stroke-dashoffset="125" stroke-linecap="round"></circle>
-                            <circle cx="96" cy="96" r="80" fill="transparent" stroke="#10B981" stroke-width="16"
-                                stroke-dasharray="502" stroke-dashoffset="376" stroke-linecap="round"></circle>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <p class="text-3xl font-black text-gray-800 italic leading-none">75%</p>
-                            <p class="text-[8px] font-black text-gray-400 uppercase italic mt-1">Productif</p>
+            <div class="mt-auto px-4 pb-8 space-y-1">
+                <a href="login.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 group hover:text-gray-600 transition-all">
+                    <div class="w-5 h-5 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                    </div>
+                    <span class="font-semibold text-sm lg:block hidden">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8 no-scrollbar">
+
+            <!-- Top Bar -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800 tracking-tight italic">Analytics Studio</h1>
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1 italic">Performance de l'année 2023-24</p>
+                </div>
+                <div class="flex gap-4">
+                     <button class="bg-white border border-gray-100 px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm">Export PDF</button>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Général</p>
+                    <div class="flex items-end gap-2">
+                        <span class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">15.4</span>
+                        <span class="text-xs font-bold text-emerald-500 mb-1">+0.8</span>
+                    </div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Moyenne Globale</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 border-emerald-100 bg-emerald-50/20">
+                    <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-4">Progression</p>
+                    <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">84%</div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Cursus Validé</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Engagement</p>
+                    <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">142h</div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Temps d'étude S1</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Rank</p>
+                    <div class="text-4xl font-black text-gray-800 tracking-tighter leading-none italic">#3</div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Position promotion</p>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                 <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-10">
+                         <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest">Évolution des Notes</h3>
+                    </div>
+                    <canvas id="mainChart" height="200"></canvas>
+                </div>
+                <div class="bg-gray-900 p-10 rounded-[3rem] text-white overflow-hidden relative shadow-2xl">
+                    <div class="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+                    <h3 class="text-sm font-black text-emerald-400 uppercase tracking-widest mb-10">Compétences Clés</h3>
+                    <div class="space-y-8 relative z-10">
+                        <div>
+                             <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-black uppercase tracking-widest">Algorithmique</span>
+                                <span class="text-xs font-black italic">18/20</span>
+                             </div>
+                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                 <div class="h-full bg-emerald-500 w-[90%]"></div>
+                             </div>
                         </div>
-                    </div>
-
-                    <div class="flex gap-6 relative z-10">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-full bg-[#2E75B6]"></div>
-                            <span class="text-[9px] font-black text-gray-400 uppercase italic">Étude</span>
+                        <div>
+                             <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-black uppercase tracking-widest">Mathématiques</span>
+                                <span class="text-xs font-black italic">14/20</span>
+                             </div>
+                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                 <div class="h-full bg-emerald-500 w-[70%]"></div>
+                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                            <span class="text-[9px] font-black text-gray-400 uppercase italic">Projets</span>
+                        <div>
+                             <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-black uppercase tracking-widest">Base de données</span>
+                                <span class="text-xs font-black italic">16/20</span>
+                             </div>
+                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                 <div class="h-full bg-emerald-500 w-[80%]"></div>
+                             </div>
+                        </div>
+                        <div>
+                             <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-black uppercase tracking-widest">Réseaux</span>
+                                <span class="text-xs font-black italic">12/20</span>
+                             </div>
+                             <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                 <div class="h-full bg-emerald-500 w-[60%]"></div>
+                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-    <script>lucide.createIcons();</script>
+
+        </main>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Sprint 1', 'Sprint 2', 'Sprint 3', 'Sprint 4', 'Sprint 5', 'Sprint 6'],
+                datasets: [{
+                    label: 'Moyenne',
+                    data: [12.5, 14.1, 13.8, 15.2, 14.9, 15.4],
+                    borderColor: '#10B981',
+                    borderWidth: 4,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: (context) => {
+                        const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
+                        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                        return gradient;
+                    }
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: { display: false },
+                        border: { display: false },
+                        ticks: { font: { size: 10, weight: '900' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        border: { display: false },
+                        ticks: { font: { size: 10, weight: '900' } }
+                    }
+                }
+            }
+        });
+    </script>
+
 </body>
-
 </html>

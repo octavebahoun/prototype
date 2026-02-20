@@ -44,81 +44,94 @@
 <body x-data="{ 
     activeTab: 'home',
     username: 'Sophie',
-    sidebarOpen: true,
+    sidebarOpen: window.innerWidth >= 1024,
     aiProcessing: false,
     showSummary: false,
     tasks: [
         { id: 1, title: 'Projet Développement Web', date: 'Demain', priority: 'Haut', icon: 'code' },
         { id: 2, title: 'Examen de Réseaux', date: 'Lundi prochain', priority: 'Medium', icon: 'globe' }
     ]
-}">
-    <div class="flex h-screen overflow-hidden">
+}" x-init="$watch('sidebarOpen', value => { if(window.innerWidth < 1024 && value) document.body.style.overflow = 'hidden'; else document.body.style.overflow = '' })">
+
+    <div class="flex h-screen overflow-hidden relative">
+
+        <!-- Mobile Overlay -->
+        <div x-show="sidebarOpen" x-transition.opacity
+             class="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden"
+             @click="sidebarOpen = false"></div>
+
         <!-- UNIFIED SIDEBAR -->
-        <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
-            class="primary-bg text-white transition-all duration-300 flex flex-col z-20 shadow-xl shadow-blue-900/10">
+        <aside :class="sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0 lg:w-20'"
+            class="primary-bg text-white transition-all duration-300 flex flex-col z-40 shadow-xl shadow-blue-900/10 fixed inset-y-0 left-0 lg:static">
             <div class="p-6 flex items-center justify-between">
-                <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen">
-                    <div class="bg-white p-2 rounded-lg text-[#2E75B6]">
+                <div class="flex items-center gap-3 overflow-hidden" x-show="sidebarOpen" x-transition>
+                    <div class="bg-white p-2 rounded-lg text-[#2E75B6] flex-shrink-0">
                         <i data-lucide="graduation-cap" class="w-6 h-6"></i>
                     </div>
                     <span class="font-bold text-xl tracking-tight whitespace-nowrap uppercase">UniSTUDENT</span>
                 </div>
+                <!-- Desktop Toggle (Inside Sidebar) -->
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="hover:bg-white/10 p-1 rounded transition-colors duration-300">
+                    class="hover:bg-white/10 p-1 rounded transition-colors duration-300 hidden lg:block">
                     <i data-lucide="menu"></i>
+                </button>
+                <!-- Mobile Close Button -->
+                <button @click="sidebarOpen = false"
+                    class="hover:bg-white/10 p-1 rounded transition-colors duration-300 lg:hidden ml-auto">
+                    <i data-lucide="x"></i>
                 </button>
             </div>
 
             <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
-                <button @click="activeTab = 'home'"
+                <button @click="activeTab = 'home'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'home' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Tableau de Bord</span>
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Tableau de Bord</span>
                 </button>
-                <button @click="activeTab = 'grades'"
+                <button @click="activeTab = 'grades'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'grades' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Mes Notes</span>
+                    <i data-lucide="bar-chart-2" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Mes Notes</span>
                 </button>
-                <button @click="activeTab = 'calendar'"
+                <button @click="activeTab = 'calendar'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'calendar' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="calendar" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Calendrier</span>
+                    <i data-lucide="calendar" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Calendrier</span>
                 </button>
                 <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
-                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Outils IA</p>
+                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic whitespace-nowrap">Outils IA</p>
                 </div>
-                <button @click="activeTab = 'ai'"
+                <button @click="activeTab = 'ai'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'ai' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Révisions IA</span>
+                    <i data-lucide="sparkles" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Révisions IA</span>
                 </button>
                 <div class="pt-4 pb-2 px-3" x-show="sidebarOpen">
-                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Social</p>
+                    <p class="text-[10px] font-black text-white/40 uppercase tracking-widest italic whitespace-nowrap">Social</p>
                 </div>
-                <button @click="activeTab = 'collab'"
+                <button @click="activeTab = 'collab'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'collab' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Collaborer</span>
+                    <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Collaborer</span>
                 </button>
-                <button @click="activeTab = 'analytics'"
+                <button @click="activeTab = 'analytics'; if(window.innerWidth < 1024) sidebarOpen = false"
                     :class="activeTab === 'analytics' ? 'sidebar-active' : 'hover:bg-white/5 opacity-70 hover:opacity-100'"
                     class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all">
-                    <i data-lucide="trending-up" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
+                    <i data-lucide="trending-up" class="w-5 h-5 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Statistiques</span>
                 </button>
             </nav>
 
             <div class="p-4 border-t border-white/10" x-show="sidebarOpen">
-                <button @click="activeTab = 'profile'"
+                <button @click="activeTab = 'profile'; if(window.innerWidth < 1024) sidebarOpen = false"
                     class="w-full bg-white/10 p-4 rounded-xl flex items-center gap-3 hover:bg-white/20 transition-all cursor-pointer">
                     <div
-                        class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm">
+                        class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#2E75B6] font-bold shadow-sm flex-shrink-0">
                         SB</div>
                     <div class="text-left overflow-hidden">
                         <p class="text-xs font-bold truncate">Sophie Bernard</p>
@@ -132,10 +145,15 @@
         <main class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col bg-[#F8FAFC]">
             <!-- UNIFIED HEADER -->
             <header
-                class="sticky top-0 bg-white h-20 px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10 transition-all">
+                class="sticky top-0 bg-white h-20 px-4 lg:px-8 flex items-center justify-between shadow-sm border-b border-gray-100 z-10 transition-all">
                 <div class="flex items-center gap-4">
+                    <!-- Mobile Toggle -->
+                    <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-[#2E75B6]">
+                        <i data-lucide="menu"></i>
+                    </button>
+
                     <div
-                        class="bg-blue-50 text-[#2E75B6] px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-blue-100 uppercase italic">
+                        class="bg-blue-50 text-[#2E75B6] px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-blue-100 uppercase italic whitespace-nowrap">
                         <span x-text="activeTab === 'home' ? 'Espace Étudiant' : 
                                       activeTab === 'grades' ? 'Résultats' :
                                       activeTab === 'calendar' ? 'Calendrier' :
@@ -143,12 +161,12 @@
                                       activeTab === 'collab' ? 'Collaboration' :
                                       activeTab === 'analytics' ? 'Analyses' : 'Profil'"></span>
                     </div>
-                    <div class="h-4 w-px bg-gray-200"></div>
-                    <p class="text-[11px] text-gray-400 font-black uppercase tracking-widest"
+                    <div class="h-4 w-px bg-gray-200 hidden sm:block"></div>
+                    <p class="text-[11px] text-gray-400 font-black uppercase tracking-widest hidden sm:block"
                         x-text="username + ' Bernard • S1 2026'"></p>
                 </div>
                 <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
+                    <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 hidden sm:flex">
                         <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
                         <span class="text-[10px] font-black uppercase italic text-gray-500">Serveur: On</span>
                     </div>
@@ -159,7 +177,7 @@
                 </div>
             </header>
 
-            <div class="p-10 flex-1">
+            <div class="p-4 lg:p-10 flex-1">
                 <!-- TAB CONTENT: HOME -->
                 <div x-show="activeTab === 'home'" x-cloak class="space-y-10 animate-in fade-in duration-500">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -213,7 +231,7 @@
                         </div>
 
                         <div
-                            class="bg-[#2E75B6] p-8 rounded-[2.5rem] shadow-xl shadow-blue-500/20 text-white relative group overflow-hidden flex flex-col justify-between">
+                            class="bg-[#2E75B6] p-8 rounded-[2.5rem] shadow-xl shadow-blue-500/20 text-white relative group overflow-hidden flex flex-col justify-between h-64 lg:h-auto">
                             <div
                                 class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
                                 <i data-lucide="book" class="w-32 h-32"></i>
@@ -236,13 +254,13 @@
                 <div x-show="activeTab === 'grades'" x-cloak
                     class="space-y-8 animate-in slide-in-from-right-4 duration-500">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Registre des
+                        <h2 class="text-xl lg:text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Registre des
                             Résultats</h2>
                         <button class="bg-white border border-gray-200 p-3 rounded-2xl hover:bg-gray-50 shadow-sm"><i
                                 data-lucide="download" class="w-5 h-5 text-gray-400"></i></button>
                     </div>
-                    <div class="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden p-2">
-                        <table class="w-full text-left">
+                    <div class="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-x-auto p-2 no-scrollbar">
+                        <table class="w-full text-left min-w-[600px]">
                             <thead>
                                 <tr
                                     class="text-[10px] font-black text-gray-300 uppercase tracking-widest italic border-b border-gray-50">
@@ -283,7 +301,7 @@
                 <div x-show="activeTab === 'calendar'" x-cloak class="space-y-8 animate-in fade-in duration-500">
                     <div class="flex items-center justify-between">
                         <div class="space-y-1">
-                            <h2 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Ma
+                            <h2 class="text-xl lg:text-3xl font-black text-gray-900 tracking-tighter uppercase italic">Ma
                                 Planification</h2>
                             <p
                                 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic leading-none">
@@ -299,7 +317,7 @@
                         </div>
                     </div>
                     <div
-                        class="bg-white rounded-[3rem] border border-gray-100 shadow-sm min-h-[600px] grid grid-cols-6 overflow-hidden">
+                        class="bg-white rounded-[3rem] border border-gray-100 shadow-sm min-h-[600px] grid grid-cols-6 overflow-x-auto min-w-[800px] lg:min-w-0">
                         <div class="col-span-1 border-r border-gray-100 bg-gray-50/30">
                             <div class="h-20 border-b border-gray-100 bg-white flex items-center justify-center">
                                 <span class="text-[9px] font-black text-gray-300 uppercase italic">T0 - Zulu</span>
@@ -343,13 +361,13 @@
                     <div x-show="!showSummary" class="max-w-2xl mx-auto space-y-8 py-10 text-center">
                         <div class="space-y-4">
                             <h2
-                                class="text-4xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">
+                                class="text-3xl lg:text-4xl font-black text-gray-900 tracking-tighter uppercase italic leading-none">
                                 Intelligence Académique</h2>
                             <p
                                 class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] max-w-sm mx-auto leading-relaxed italic">
                                 Téléchargez vos supports de cours pour générer des quizz et fiches synthétiques.</p>
                         </div>
-                        <div class="border-2 border-dashed border-blue-100 rounded-3xl p-16 bg-white hover:bg-blue-50/50 hover:border-[#2E75B6]/30 transition-all cursor-pointer group shadow-sm"
+                        <div class="border-2 border-dashed border-blue-100 rounded-3xl p-8 lg:p-16 bg-white hover:bg-blue-50/50 hover:border-[#2E75B6]/30 transition-all cursor-pointer group shadow-sm"
                             @click="aiProcessing = true; setTimeout(() => { aiProcessing = false; showSummary = true; }, 2000)">
                             <i data-lucide="upload-cloud"
                                 class="w-12 h-12 text-gray-300 group-hover:text-[#2E75B6] group-hover:scale-110 transition-all duration-500 mx-auto mb-4"></i>

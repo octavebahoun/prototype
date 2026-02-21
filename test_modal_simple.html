@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Modal Simple</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal { display: none; }
+        .modal.show { display: flex; }
+    </style>
+</head>
+<body class="p-8 bg-gray-100">
+    <h1 class="text-2xl font-bold mb-4">Test Modal CSV</h1>
+    
+    <button onclick="openModal('testModal')" class="px-4 py-2 bg-blue-500 text-white rounded">
+        <i class="fa-solid fa-upload mr-2"></i>Test Upload CSV
+    </button>
+    
+    <!-- Modal Simple -->
+    <div id="testModal" class="modal fixed inset-0 bg-black/50 items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full m-4">
+            <h2 class="text-lg font-bold mb-4">Test Modal</h2>
+            <p>Si vous voyez ce modal, les fonctions JavaScript marchent !</p>
+            
+            <div class="mt-4">
+                <button onclick="closeModal('testModal')" class="px-4 py-2 bg-gray-500 text-white rounded">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+    </script>
+</body>
+</html>

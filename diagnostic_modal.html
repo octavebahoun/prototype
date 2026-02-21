@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnostic Modal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal { display: none; }
+        .modal.show { display: flex; }
+    </style>
+</head>
+<body class="p-8">
+    <h1 class="text-2xl font-bold mb-4">🔍 Diagnostic Modal CSV</h1>
+    
+    <div class="space-y-4">
+        <button onclick="testOpenModal()" class="px-4 py-2 bg-green-500 text-white rounded">
+            ✅ Test Ouverture Modal
+        </button>
+        
+        <button onclick="testCSVFunction()" class="px-4 py-2 bg-blue-500 text-white rounded">
+            📁 Test Fonction CSV
+        </button>
+        
+        <button onclick="runDiagnostic()" class="px-4 py-2 bg-purple-500 text-white rounded">
+            🔍 Lancer Diagnostic Complet
+        </button>
+    </div>
+    
+    <div id="results" class="mt-6 p-4 bg-gray-100 rounded hidden"></div>
+    
+    <!-- Modal Test -->
+    <div id="testModal" class="modal fixed inset-0 bg-black/50 items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full m-4">
+            <h2 class="text-lg font-bold mb-4">🎉 Modal Fonctionnel !</h2>
+            <p class="mb-4">Si vous voyez ce message, le système modal fonctionne correctement.</p>
+            <button onclick="closeTestModal()" class="px-4 py-2 bg-red-500 text-white rounded">
+                Fermer
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function testOpenModal() {
+            document.getElementById('testModal').classList.add('show');
+        }
+        
+        function closeTestModal() {
+            document.getElementById('testModal').classList.remove('show');
+        }
+        
+        function testCSVFunction() {
+            const results = document.getElementById('results');
+            results.classList.remove('hidden');
+            results.innerHTML = '<h3 class="font-bold text-green-600">✅ Test Fonctions CSV</h3><ul class="mt-2"><li>• downloadTemplate: ' + (typeof downloadTemplate === 'function' ? 'OK' : 'MANQUANT') + '</li><li>• handleCSVUpload: ' + (typeof handleCSVUpload === 'function' ? 'OK' : 'MANQUANT') + '</li><li>• openModal: ' + (typeof openModal === 'function' ? 'OK' : 'MANQUANT') + '</li></ul>';
+        }
+        
+        function runDiagnostic() {
+            const results = document.getElementById('results');
+            results.classList.remove('hidden');
+            
+            let html = '<h3 class="font-bold text-blue-600">🔍 Diagnostic Complet</h3><div class="mt-2 text-sm">';
+            
+            // Test éléments DOM
+            html += '<p><strong>Éléments DOM:</strong></p><ul>';
+            html += '<li>• newProgramModal: ' + (document.getElementById('newProgramModal') ? 'TROUVÉ' : 'MANQUANT') + '</li>';
+            html += '<li>• csvUploadZone: ' + (document.getElementById('csvUploadZone') ? 'TROUVÉ' : 'MANQUANT') + '</li>';
+            html += '<li>• csvFileInput: ' + (document.getElementById('csvFileInput') ? 'TROUVÉ' : 'MANQUANT') + '</li>';
+            html += '</ul>';
+            
+            // Test fonctions
+            html += '<p class="mt-2"><strong>Fonctions JavaScript:</strong></p><ul>';
+            html += '<li>• openModal: ' + (typeof window.openModal === 'function' ? 'OK' : 'MANQUANT') + '</li>';
+            html += '<li>• closeModal: ' + (typeof window.closeModal === 'function' ? 'OK' : 'MANQUANT') + '</li>';
+            html += '<li>• downloadTemplate: ' + (typeof window.downloadTemplate === 'function' ? 'OK' : 'MANQUANT') + '</li>';
+            html += '</ul>';
+            
+            html += '</div>';
+            results.innerHTML = html;
+        }
+        
+        // Simuler les fonctions si elles manquent
+        if (typeof window.downloadTemplate === 'undefined') {
+            window.downloadTemplate = function() { alert('downloadTemplate appelé !'); };
+        }
+        if (typeof window.openModal === 'undefined') {
+            window.openModal = function(id) { alert('openModal appelé avec: ' + id); };
+        }
+    </script>
+</body>
+</html>

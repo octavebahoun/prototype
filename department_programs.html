@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="fr" class="transition-colors duration-300">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academix - Gestion des Filières</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-item-active {
+            color: #10B981;
+            position: relative;
+        }
+
+        .sidebar-item-active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: #10B981;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Animations personnalisées pour le drag & drop */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .animate-fade-out {
+            animation: fadeOut 0.3s ease-in;
+        }
+
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .modal {
+            display: none;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium overflow-hidden">
+    <div class="flex h-screen relative">
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300">
+        </div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-60 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div
+                    class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">
+                    Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <div
+                    class="px-4 py-2 text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest italic">
+                    Département Control</div>
+                <a href="chef_dept_dashboard.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chart-simple text-base"></i>
+                    <span class="text-sm">Vue d'ensemble</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-list-check text-base"></i>
+                    <span class="text-sm">Gestion Filières</span>
+                </a>
+                <a href="import_grades.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-file-csv text-base"></i>
+                    <span class="text-sm">Import CSV - Notes</span>
+                </a>
+                <a href="department_schedule.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-calendar-days text-base"></i>
+                    <span class="text-sm">Emploi du Temps</span>
+                </a>
+            </nav>
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+                    <span class="text-sm">Déconnexion</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <header
+                class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4">
+                        <button id="sidebar-toggle"
+                            class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all"><i
+                                class="fa-solid fa-bars-staggered"></i></button>
+                        <div>
+                            <h1
+                                class="text-lg lg:text-2xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">
+                                Gestion des Filières</h1>
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Département
+                                Informatique</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="theme-toggle"
+                            class="w-10 lg:w-12 h-10 lg:h-12 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl lg:rounded-2xl flex items-center justify-center text-gray-500 dark:text-slate-400 hover:text-emerald-500 transition-all shadow-sm">
+                            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon"></i>
+                            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
+                <!-- Header avec filtres et actions -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h2
+                                class="text-lg font-black text-gray-900 dark:text-slate-100 uppercase tracking-tighter mb-2">
+                                Filières du Département</h2>
+                            <p class="text-xs text-gray-500">Gérez toutes les filières et programmes d'études de votre
+                                département</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-500 font-bold">Filtrer par niveau:</label>
+                                <select id="levelFilter"
+                                    class="px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">Tous</option>
+                                    <option value="BTS">BTS</option>
+                                    <option value="Licence">Licence</option>
+                                    <option value="Master">Master</option>
+                                </select>
+                            </div>
+                            <button onclick="openModal('newProgramModal')"
+                                class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-bold hover:bg-emerald-600 transition-all">
+                                <i class="fa-solid fa-upload mr-2"></i>Upload CSV - Filières
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des filières -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="programsList">
+                    <!-- Licence Informatique -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden program-card"
+                        data-level="Licence">
+                        <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 bg-blue-100 dark:bg-blue-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-blue-600 font-black text-lg">L</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100 text-lg">Licence
+                                            Informatique</h3>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wider font-bold">Code:
+                                            L-INFO-001</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold">Actif</span>
+                                    <button class="text-gray-400 hover:text-gray-600 transition-colors"
+                                        onclick="toggleDropdown('dropdown-licence')">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown-licence"
+                                        class="absolute mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 z-10 hidden">
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-edit mr-2"></i>Modifier
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-users mr-2"></i>Voir Étudiants
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-chart-line mr-2"></i>Statistiques
+                                        </a>
+                                        <hr class="my-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <i class="fa-solid fa-trash mr-2"></i>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">156</p>
+                                    <p class="text-xs text-gray-500">Étudiants</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">3</p>
+                                    <p class="text-xs text-gray-500">Années</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">18</p>
+                                    <p class="text-xs text-gray-500">Matières</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h4
+                                class="font-bold text-gray-900 dark:text-slate-100 mb-3 uppercase text-xs tracking-wider">
+                                Gestion de la Filière</h4>
+
+                            <!-- Tabs Navigation -->
+                            <div class="flex border-b border-gray-200 dark:border-slate-700 mb-4">
+                                <button class="px-4 py-2 text-sm font-bold text-blue-600 border-b-2 border-blue-600"
+                                    onclick="showTab('licence', 'matieres')" id="licence-matieres-tab">Matières</button>
+                                <button
+                                    class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors"
+                                    onclick="showTab('licence', 'etudiants')"
+                                    id="licence-etudiants-tab">Étudiants</button>
+                            </div>
+
+                            <!-- Tab Content: Matières -->
+                            <div id="licence-matieres" class="tab-content">
+                                <div class="space-y-2">
+                                    <div
+                                        class="flex items-center justify-between p-2 bg-blue-50 dark:bg-blue-500/10 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">Programmation
+                                                C</p>
+                                            <p class="text-xs text-gray-500">Code: PROG-C-L1 • 6 ECTS</p>
+                                        </div>
+                                        <span class="text-blue-600 text-xs font-bold">L1</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between p-2 bg-blue-50 dark:bg-blue-500/10 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">Mathématiques
+                                            </p>
+                                            <p class="text-xs text-gray-500">Code: MATH-L1 • 5 ECTS</p>
+                                        </div>
+                                        <span class="text-blue-600 text-xs font-bold">L1</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between p-2 bg-purple-50 dark:bg-purple-500/10 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">Base de
+                                                Données</p>
+                                            <p class="text-xs text-gray-500">Code: BDD-L2 • 6 ECTS</p>
+                                        </div>
+                                        <span class="text-purple-600 text-xs font-bold">L2</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between p-2 bg-green-50 dark:bg-green-500/10 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">Projet Final
+                                            </p>
+                                            <p class="text-xs text-gray-500">Code: PROJ-L3 • 8 ECTS</p>
+                                        </div>
+                                        <span class="text-green-600 text-xs font-bold">L3</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab Content: Étudiants -->
+                            <div id="licence-etudiants" class="tab-content hidden">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                    <div class="text-center p-3 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
+                                        <p class="text-sm font-bold text-blue-600">L1</p>
+                                        <p class="text-lg font-black text-gray-900 dark:text-slate-100">52</p>
+                                        <p class="text-xs text-gray-500">étudiants</p>
+                                    </div>
+                                    <div class="text-center p-3 bg-purple-50 dark:bg-purple-500/10 rounded-lg">
+                                        <p class="text-sm font-bold text-purple-600">L2</p>
+                                        <p class="text-lg font-black text-gray-900 dark:text-slate-100">48</p>
+                                        <p class="text-xs text-gray-500">étudiants</p>
+                                    </div>
+                                    <div class="text-center p-3 bg-green-50 dark:bg-green-500/10 rounded-lg">
+                                        <p class="text-sm font-bold text-green-600">L3</p>
+                                        <p class="text-lg font-black text-gray-900 dark:text-slate-100">56</p>
+                                        <p class="text-xs text-gray-500">étudiants</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 max-h-40 overflow-y-auto">
+                                    <div
+                                        class="flex items-center justify-between p-2 border border-gray-200 dark:border-slate-700 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">KOUASSI
+                                                Marie-Claire</p>
+                                            <p class="text-xs text-gray-500">L1-INFO-001 • marie.kouassi@academix.edu
+                                            </p>
+                                        </div>
+                                        <span class="text-blue-600 text-xs font-bold">L1</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between p-2 border border-gray-200 dark:border-slate-700 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">DIALLO
+                                                Abdoulaye</p>
+                                            <p class="text-xs text-gray-500">L2-INFO-015 • abdou.diallo@academix.edu</p>
+                                        </div>
+                                        <span class="text-purple-600 text-xs font-bold">L2</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-between p-2 border border-gray-200 dark:border-slate-700 rounded">
+                                        <div>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-slate-100">NGUYEN Van
+                                                Duc</p>
+                                            <p class="text-xs text-gray-500">L3-INFO-032 • duc.nguyen@academix.edu</p>
+                                        </div>
+                                        <span class="text-green-600 text-xs font-bold">L3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Master Informatique -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden program-card"
+                        data-level="Master">
+                        <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 bg-purple-100 dark:bg-purple-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-purple-600 font-black text-lg">M</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100 text-lg">Master
+                                            Informatique</h3>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wider font-bold">Code:
+                                            M-INFO-001</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold">Actif</span>
+                                    <button class="text-gray-400 hover:text-gray-600 transition-colors"
+                                        onclick="toggleDropdown('dropdown-master')">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown-master"
+                                        class="absolute mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 z-10 hidden">
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-edit mr-2"></i>Modifier
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-users mr-2"></i>Voir Étudiants
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-chart-line mr-2"></i>Statistiques
+                                        </a>
+                                        <hr class="my-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <i class="fa-solid fa-trash mr-2"></i>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">84</p>
+                                    <p class="text-xs text-gray-500">Étudiants</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">2</p>
+                                    <p class="text-xs text-gray-500">Années</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">15</p>
+                                    <p class="text-xs text-gray-500">Matières</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h4
+                                class="font-bold text-gray-900 dark:text-slate-100 mb-3 uppercase text-xs tracking-wider">
+                                Répartition par année</h4>
+                            <div class="space-y-3">
+                                <div
+                                    class="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-500/10 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-purple-500 text-white rounded-lg flex items-center justify-center text-xs font-bold">
+                                            M1</div>
+                                        <span class="text-sm font-bold text-gray-900 dark:text-slate-100">Master
+                                            1</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-purple-600">42 étudiants</p>
+                                        <button onclick="openStudentModal('M1')"
+                                            class="text-xs text-purple-500 hover:text-purple-700">Voir liste</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-500/10 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-purple-500 text-white rounded-lg flex items-center justify-center text-xs font-bold">
+                                            M2</div>
+                                        <span class="text-sm font-bold text-gray-900 dark:text-slate-100">Master
+                                            2</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-purple-600">42 étudiants</p>
+                                        <button onclick="openStudentModal('M2')"
+                                            class="text-xs text-purple-500 hover:text-purple-700">Voir liste</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BTS Informatique de Gestion -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden program-card"
+                        data-level="BTS">
+                        <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 bg-green-100 dark:bg-green-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-green-600 font-black text-sm">BTS</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100 text-lg">BTS
+                                            Informatique de Gestion</h3>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wider font-bold">Code:
+                                            BTS-INFO-001</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold">Actif</span>
+                                    <button class="text-gray-400 hover:text-gray-600 transition-colors"
+                                        onclick="toggleDropdown('dropdown-bts')">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div id="dropdown-bts"
+                                        class="absolute mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-100 dark:border-slate-700 z-10 hidden">
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-edit mr-2"></i>Modifier
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-users mr-2"></i>Voir Étudiants
+                                        </a>
+                                        <a href="#"
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
+                                            <i class="fa-solid fa-chart-line mr-2"></i>Statistiques
+                                        </a>
+                                        <hr class="my-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <i class="fa-solid fa-trash mr-2"></i>Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">216</p>
+                                    <p class="text-xs text-gray-500">Étudiants</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">2</p>
+                                    <p class="text-xs text-gray-500">Années</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-black text-gray-900 dark:text-slate-100">14</p>
+                                    <p class="text-xs text-gray-500">Matières</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <h4
+                                class="font-bold text-gray-900 dark:text-slate-100 mb-3 uppercase text-xs tracking-wider">
+                                Répartition par année</h4>
+                            <div class="space-y-3">
+                                <div
+                                    class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-500/10 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-green-500 text-white rounded-lg flex items-center justify-center text-xs font-bold">
+                                            1</div>
+                                        <span class="text-sm font-bold text-gray-900 dark:text-slate-100">Première
+                                            Année</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-green-600">108 étudiants</p>
+                                        <button onclick="openStudentModal('BTS1')"
+                                            class="text-xs text-green-500 hover:text-green-700">Voir liste</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-500/10 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-green-500 text-white rounded-lg flex items-center justify-center text-xs font-bold">
+                                            2</div>
+                                        <span class="text-sm font-bold text-gray-900 dark:text-slate-100">Deuxième
+                                            Année</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-green-600">108 étudiants</p>
+                                        <button onclick="openStudentModal('BTS2')"
+                                            class="text-xs text-green-500 hover:text-green-700">Voir liste</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal pour upload CSV filières -->
+    <div id="newProgramModal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-black text-gray-900 dark:text-slate-100 uppercase tracking-tight">
+                    <i class="fa-solid fa-upload mr-2 text-emerald-500"></i>
+                    Importer Filières via CSV
+                </h2>
+                <button onclick="closeModal('newProgramModal')"
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Instructions format CSV -->
+            <div
+                class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30 border-2 border-yellow-300 dark:border-yellow-700 rounded-xl p-6 mb-6 shadow-lg">
+                <div class="flex items-start gap-3 mb-4">
+                    <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-exclamation text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h3
+                            class="font-black text-yellow-800 dark:text-yellow-300 text-lg mb-2 uppercase tracking-wide">
+                            ⚠️ ATTENTION - Format CSV Obligatoire
+                        </h3>
+                        <p class="text-yellow-700 dark:text-yellow-200 text-sm font-semibold">
+                            Le fichier doit respecter EXACTEMENT ce format, sinon l'import échouera !
+                        </p>
+                        <div class="mt-4">
+                            <button onclick="downloadTemplate()"
+                                class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold text-sm transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                <i class="fa-solid fa-download mr-2"></i>Télécharger le modèle CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-slate-800 p-4 rounded-lg border-2 border-yellow-200 dark:border-yellow-600">
+                    <p class="text-sm text-yellow-700 dark:text-yellow-200 mb-3 font-semibold">
+                        📋 Colonnes requises dans cet ordre exact :
+                    </p>
+                    <div
+                        class="bg-gray-100 dark:bg-slate-700 p-3 rounded border font-mono text-xs mb-3 overflow-x-auto">
+                        Filière,Niveau,Matière,Code_Matière,ECTS,Matricule_Étudiant,Nom_Étudiant,Prénom_Étudiant,Email_Étudiant
+                    </div>
+                    <div class="text-xs text-yellow-600 dark:text-yellow-300">
+                        <strong>💡 Exemple de ligne :</strong><br>
+                        <code class="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded text-xs">
+                            Licence Génie Logiciel,L3,Programmation Orientée Objet,POO-301,6,2024001,Dupont,Marie,marie.dupont@email.com
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone d'upload -->
+        <div id="csvUploadZone"
+            class="border-4 border-dashed border-gray-300 dark:border-slate-600 rounded-2xl p-12 text-center mb-6 transition-all duration-300 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-blue-50 dark:hover:from-emerald-950/20 dark:hover:to-blue-950/20 cursor-pointer transform hover:scale-[1.02] hover:shadow-xl">
+            <div id="uploadPrompt">
+                <div class="mb-6">
+                    <div
+                        class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform transition-transform hover:rotate-6">
+                        <i class="fa-solid fa-cloud-upload text-3xl text-white"></i>
+                    </div>
+                </div>
+                <h4 class="text-xl font-black text-gray-800 dark:text-gray-200 mb-3 uppercase tracking-wide">
+                    📁 Déposez votre fichier CSV ici
+                </h4>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+                    Glissez-déposez ou cliquez pour sélectionner votre fichier
+                </p>
+                <div class="space-y-3">
+                    <button type="button" onclick="document.getElementById('csvFileInput').click()"
+                        class="px-8 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-xl hover:from-emerald-600 hover:to-blue-600 transition-all font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <i class="fa-solid fa-file-csv mr-2"></i>Sélectionner un fichier CSV
+                    </button>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        Formats acceptés: .csv uniquement • Taille max: 10MB
+                    </p>
+                </div>
+            </div>
+            <div id="uploadSuccess" class="hidden">
+                <div class="mb-6">
+                    <div
+                        class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
+                        <i class="fa-solid fa-check-circle text-3xl text-white"></i>
+                    </div>
+                </div>
+                <h4 class="text-xl font-black text-emerald-700 dark:text-emerald-400 mb-3 uppercase tracking-wide">
+                    ✅ Fichier chargé avec succès !
+                </h4>
+                <div class="bg-emerald-100 dark:bg-emerald-900/50 rounded-xl p-4 inline-block">
+                    <p id="fileName" class="text-emerald-800 dark:text-emerald-300 font-bold"></p>
+                </div>
+            </div>
+        </div>
+
+        <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+
+        <!-- Aperçu des données -->
+        <div id="csvPreview" class="hidden mb-6">
+            <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                <i class="fa-solid fa-eye mr-2 text-emerald-500"></i>Aperçu des données
+            </h3>
+
+            <!-- Compteurs -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div
+                    class="bg-emerald-50 dark:bg-emerald-950/50 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                    <p class="text-sm text-emerald-600 dark:text-emerald-300">Filières détectées</p>
+                    <p id="filiereCount" class="text-xl font-bold text-emerald-700 dark:text-emerald-200">0</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-950/50 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p class="text-sm text-blue-600 dark:text-blue-300">Matières détectées</p>
+                    <p id="matiereCount" class="text-xl font-bold text-blue-700 dark:text-blue-200">0</p>
+                </div>
+                <div
+                    class="bg-purple-50 dark:bg-purple-950/50 p-3 rounded-lg border border-purple-200 dark:border-purple-800">
+                    <p class="text-sm text-purple-600 dark:text-purple-300">Étudiants détectés</p>
+                    <p id="etudiantCount" class="text-xl font-bold text-purple-700 dark:text-purple-200">0</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-950/50 p-3 rounded-lg border border-gray-200 dark:border-gray-800">
+                    <p class="text-sm text-gray-600 dark:text-gray-300">Lignes totales</p>
+                    <p id="totalLines" class="text-xl font-bold text-gray-700 dark:text-gray-200">0</p>
+                </div>
+            </div>
+
+            <!-- Tableau d'aperçu -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100 dark:bg-slate-800">
+                        <tr>
+                            <th class="px-3 py-2 text-left font-bold">Filière</th>
+                            <th class="px-3 py-2 text-left font-bold">Niveau</th>
+                            <th class="px-3 py-2 text-left font-bold">Matière</th>
+                            <th class="px-3 py-2 text-left font-bold">Code</th>
+                            <th class="px-3 py-2 text-left font-bold">ECTS</th>
+                            <th class="px-3 py-2 text-left font-bold">Matricule</th>
+                            <th class="px-3 py-2 text-left font-bold">Nom</th>
+                            <th class="px-3 py-2 text-left font-bold">Prénom</th>
+                            <th class="px-3 py-2 text-left font-bold">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="csvPreviewTable" class="divide-y divide-gray-200 dark:divide-slate-700">
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Affichage des 10 premières lignes seulement
+            </p>
+        </div>
+
+        <!-- Erreurs de validation -->
+        <div id="csvErrors" class="hidden mb-6">
+            <div class="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <h3 class="font-bold text-red-800 dark:text-red-300 mb-2 flex items-center">
+                    <i class="fa-solid fa-exclamation-triangle mr-2"></i>Erreurs détectées
+                </h3>
+                <ul id="errorList" class="text-sm text-red-700 dark:text-red-200 space-y-1">
+                </ul>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="flex gap-4 pt-4">
+            <button type="button" onclick="closeModal('newProgramModal')"
+                class="flex-1 px-6 py-3 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all font-bold">
+                <i class="fa-solid fa-times mr-2"></i>Annuler
+            </button>
+            <button type="button" id="importBtn" onclick="importCSVData()" disabled
+                class="flex-1 px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all font-bold disabled:bg-gray-300 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-download mr-2"></i>Importer les données
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal pour voir les étudiants -->
+    <div id="studentsModal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="studentsModalTitle"
+                    class="text-xl font-black text-gray-900 dark:text-slate-100 uppercase tracking-tight">Étudiants -
+                    Licence L1</h2>
+                <button onclick="closeModal('studentsModal')"
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-emerald-600">52</p>
+                            <p class="text-xs text-gray-500">Inscrits</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-blue-600">48</p>
+                            <p class="text-xs text-gray-500">Actifs</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-red-600">4</p>
+                            <p class="text-xs text-gray-500">Abandons</p>
+                        </div>
+                    </div>
+                    <button
+                        class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-bold hover:bg-emerald-600 transition-all">
+                        <i class="fa-solid fa-download mr-2"></i>Exporter Liste
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-slate-700">
+                            <th
+                                class="text-left py-3 px-2 font-bold text-gray-900 dark:text-slate-100 text-xs uppercase">
+                                Nom & Prénom</th>
+                            <th
+                                class="text-left py-3 px-2 font-bold text-gray-900 dark:text-slate-100 text-xs uppercase">
+                                Matricule</th>
+                            <th
+                                class="text-left py-3 px-2 font-bold text-gray-900 dark:text-slate-100 text-xs uppercase">
+                                Statut</th>
+                            <th
+                                class="text-left py-3 px-2 font-bold text-gray-900 dark:text-slate-100 text-xs uppercase">
+                                Moyenne</th>
+                            <th
+                                class="text-left py-3 px-2 font-bold text-gray-900 dark:text-slate-100 text-xs uppercase">
+                                Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr
+                            class="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800">
+                            <td class="py-3 px-2 font-bold">KOUASSI Marie-Claire</td>
+                            <td class="py-3 px-2 text-gray-500">L1-INFO-2025-001</td>
+                            <td class="py-3 px-2"><span
+                                    class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Actif</span>
+                            </td>
+                            <td class="py-3 px-2 font-bold text-blue-600">15.2/20</td>
+                            <td class="py-3 px-2">
+                                <button class="text-blue-500 hover:text-blue-700 mr-2"><i
+                                        class="fa-solid fa-eye"></i></button>
+                                <button class="text-green-500 hover:text-green-700"><i
+                                        class="fa-solid fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr
+                            class="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800">
+                            <td class="py-3 px-2 font-bold">DIALLO Abdoulaye</td>
+                            <td class="py-3 px-2 text-gray-500">L1-INFO-2025-002</td>
+                            <td class="py-3 px-2"><span
+                                    class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Actif</span>
+                            </td>
+                            <td class="py-3 px-2 font-bold text-blue-600">13.8/20</td>
+                            <td class="py-3 px-2">
+                                <button class="text-blue-500 hover:text-blue-700 mr-2"><i
+                                        class="fa-solid fa-eye"></i></button>
+                                <button class="text-green-500 hover:text-green-700"><i
+                                        class="fa-solid fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        <tr
+                            class="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800">
+                            <td class="py-3 px-2 font-bold">NGUYEN Van Duc</td>
+                            <td class="py-3 px-2 text-gray-500">L1-INFO-2025-003</td>
+                            <td class="py-3 px-2"><span
+                                    class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Abandon</span>
+                            </td>
+                            <td class="py-3 px-2 font-bold text-gray-400">8.5/20</td>
+                            <td class="py-3 px-2">
+                                <button class="text-blue-500 hover:text-blue-700 mr-2"><i
+                                        class="fa-solid fa-eye"></i></button>
+                                <button class="text-orange-500 hover:text-orange-700"><i
+                                        class="fa-solid fa-undo"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
+        close.addEventListener('click', closeSidebar);
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            lightIcon.classList.remove('hidden'); darkIcon.classList.add('hidden');
+        } else {
+            lightIcon.classList.add('hidden'); darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function () {
+            darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden');
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+
+        // Modal functions
+        window.openModal = function(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            // Reset upload modal
+            if (modalId === 'newProgramModal') {
+                // Reset CSV upload state
+                const uploadPrompt = document.getElementById('uploadPrompt');
+                const uploadSuccess = document.getElementById('uploadSuccess');
+                const csvPreview = document.getElementById('csvPreview');
+                const csvErrors = document.getElementById('csvErrors');
+
+                if (uploadPrompt) uploadPrompt.classList.remove('hidden');
+                if (uploadSuccess) uploadSuccess.classList.add('hidden');
+                if (csvPreview) csvPreview.classList.add('hidden');
+                if (csvErrors) csvErrors.classList.add('hidden');
+
+                // Reset file input
+                const fileInput = document.getElementById('csvFileInput');
+                if (fileInput) fileInput.value = '';
+
+                // Reset CSV data
+                csvData = null;
+            }
+        }
+
+        function openStudentModal(level) {
+            document.getElementById('studentsModalTitle').textContent = `Étudiants - ${level}`;
+            openModal('studentsModal');
+        }
+
+        // Tab functions
+        function showTab(filiere, tabName) {
+            // Hide all tab contents for this filière
+            document.querySelectorAll(`#${filiere}-matieres, #${filiere}-etudiants`).forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Remove active state from all tabs
+            document.querySelectorAll(`#${filiere}-matieres-tab, #${filiere}-etudiants-tab`).forEach(tab => {
+                tab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                tab.classList.add('text-gray-500');
+            });
+
+            // Show selected tab content
+            document.getElementById(`${filiere}-${tabName}`).classList.remove('hidden');
+
+            // Activate selected tab
+            const activeTab = document.getElementById(`${filiere}-${tabName}-tab`);
+            activeTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            activeTab.classList.remove('text-gray-500');
+        }
+
+        // CSV Upload functions
+        function handleCSVSelect(input) {
+            const file = input.files[0];
+            if (file && file.type === 'text/csv') {
+                document.getElementById('selectedFileName').textContent = file.name;
+                document.getElementById('uploadDefault').classList.add('hidden');
+                document.getElementById('uploadSelected').classList.remove('hidden');
+            } else {
+                alert('Veuillez sélectionner un fichier CSV valide.');
+                input.value = '';
+            }
+        }
+
+        function processCSV() {
+            // Simulation du traitement CSV
+            setTimeout(() => {
+                // Données d'exemple
+                document.getElementById('filiereCount').textContent = '3';
+                document.getElementById('matiereCount').textContent = '12';
+                document.getElementById('etudiantCount').textContent = '156';
+
+                // Exemple de données pour la prévisualisation
+                const previewData = [
+                    { filiere: 'Licence Informatique', matiere: 'Programmation C', etudiant: 'KOUASSI Marie-Claire', email: 'marie.kouassi@academix.edu' },
+                    { filiere: 'Licence Informatique', matiere: 'Mathématiques', etudiant: 'DIALLO Abdoulaye', email: 'abdou.diallo@academix.edu' },
+                    { filiere: 'Master Informatique', matiere: 'IA Avancée', etudiant: 'NGUYEN Van Duc', email: 'duc.nguyen@academix.edu' }
+                ];
+
+                const tbody = document.getElementById('csvPreviewBody');
+                tbody.innerHTML = '';
+
+                previewData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-100 dark:border-slate-800';
+                    tr.innerHTML = `
+                        <td class="p-3 font-bold">${row.filiere}</td>
+                        <td class="p-3">${row.matiere}</td>
+                        <td class="p-3">${row.etudiant}</td>
+                        <td class="p-3 text-blue-600">${row.email}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('csvPreview').classList.remove('hidden');
+                document.getElementById('confirmUploadBtn').classList.remove('hidden');
+            }, 2000);
+        }
+
+        function resetCSVUpload() {
+            document.getElementById('csvFileInput').value = '';
+            document.getElementById('uploadDefault').classList.remove('hidden');
+            document.getElementById('uploadSelected').classList.add('hidden');
+            document.getElementById('csvPreview').classList.add('hidden');
+            document.getElementById('confirmUploadBtn').classList.add('hidden');
+        }
+
+        // Assigner les fonctions à window pour qu'elles soient disponibles globalement
+        window.downloadTemplate = function() {
+            // Simulation du téléchargement du template
+            const csvContent = 'Filière,Niveau,Matière,Code_Matière,ECTS,Matricule_Étudiant,Nom_Étudiant,Prénom_Étudiant,Email_Étudiant\n' +
+                'Licence Informatique,L1,Programmation C,PROG-C-L1,6,L1-INFO-001,KOUASSI,Marie-Claire,marie.kouassi@academix.edu\n' +
+                'Licence Informatique,L1,Mathématiques,MATH-L1,5,L1-INFO-002,DIALLO,Abdoulaye,abdou.diallo@academix.edu';
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'template_filieres_etudiants.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function confirmCSVUpload() {
+            const btn = document.getElementById('confirmUploadBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Création en cours...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert('Import réussi !\n\n• 3 filières créées\n• 12 matières importées\n• 156 étudiants ajoutés');
+                closeModal('csvUploadModal');
+                // Refresh page to show new data
+                location.reload();
+            }, 3000);
+        }
+
+        // Dropdown functions
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+
+            // Fermer tous les autres dropdowns
+            document.querySelectorAll('[id^="dropdown-"]').forEach(dd => {
+                if (dd.id !== dropdownId) {
+                    dd.classList.add('hidden');
+                }
+            });
+
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Fermer les dropdowns en cliquant ailleurs
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('button')) {
+                document.querySelectorAll('[id^="dropdown-"]').forEach(dd => {
+                    dd.classList.add('hidden');
+                });
+            }
+        });
+
+        // Filtre par niveau
+        document.getElementById('levelFilter').addEventListener('change', function () {
+            const selectedLevel = this.value;
+            const programCards = document.querySelectorAll('.program-card');
+
+            programCards.forEach(card => {
+                if (selectedLevel === '' || card.dataset.level === selectedLevel) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Fermer les modals en cliquant sur l'overlay
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
+            });
+        });
+
+        // Nouvelles fonctions pour l'upload CSV des filières
+        let csvData = null;
+
+        function parseCSVData(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim());
+            const headers = lines[0].split(',');
+
+            // Vérifier les en-têtes requis
+            const requiredHeaders = ['Filière', 'Niveau', 'Matière', 'Code_Matière', 'ECTS', 'Matricule_Étudiant', 'Nom_Étudiant', 'Prénom_Étudiant', 'Email_Étudiant'];
+            const errors = [];
+
+            // Validation des en-têtes
+            requiredHeaders.forEach(header => {
+                if (!headers.includes(header)) {
+                    errors.push(`Colonne manquante : ${header}`);
+                }
+            });
+
+            if (errors.length > 0) {
+                displayErrors(errors);
+                return;
+            }
+
+            // Parser les données
+            csvData = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length === headers.length) {
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header.trim()] = values[index].trim();
+                    });
+                    csvData.push(row);
+                }
+            }
+
+            // Valider les données
+            validateCSVData();
+            displayCSVPreview();
+        }
+
+        function validateCSVData() {
+            const errors = [];
+
+            csvData.forEach((row, index) => {
+                // Validation email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(row.Email_Étudiant)) {
+                    errors.push(`Ligne ${index + 2}: Email invalide (${row.Email_Étudiant})`);
+                }
+
+                // Validation ECTS (doit être un nombre)
+                if (isNaN(row.ECTS) || row.ECTS < 1 || row.ECTS > 15) {
+                    errors.push(`Ligne ${index + 2}: ECTS invalide (${row.ECTS})`);
+                }
+
+                // Vérifier les champs obligatoires
+                const requiredFields = ['Filière', 'Niveau', 'Matière', 'Code_Matière', 'Matricule_Étudiant', 'Nom_Étudiant', 'Prénom_Étudiant'];
+                requiredFields.forEach(field => {
+                    if (!row[field] || row[field].trim() === '') {
+                        errors.push(`Ligne ${index + 2}: ${field} manquant`);
+                    }
+                });
+            });
+
+            if (errors.length > 0) {
+                displayErrors(errors);
+                document.getElementById('importBtn').disabled = true;
+            } else {
+                document.getElementById('csvErrors').classList.add('hidden');
+                document.getElementById('importBtn').disabled = false;
+            }
+        }
+
+        function displayErrors(errors) {
+            const errorList = document.getElementById('errorList');
+            errorList.innerHTML = errors.map(error => `<li>• ${error}</li>`).join('');
+            document.getElementById('csvErrors').classList.remove('hidden');
+        }
+
+        function displayCSVPreview() {
+            // Calculer les statistiques
+            const filieres = new Set(csvData.map(row => row.Filière));
+            const matieres = new Set(csvData.map(row => row.Matière));
+            const etudiants = new Set(csvData.map(row => row.Matricule_Étudiant));
+
+            document.getElementById('filiereCount').textContent = filieres.size;
+            document.getElementById('matiereCount').textContent = matieres.size;
+            document.getElementById('etudiantCount').textContent = etudiants.size;
+            document.getElementById('totalLines').textContent = csvData.length;
+
+            // Afficher le tableau d'aperçu (10 premières lignes)
+            const previewTable = document.getElementById('csvPreviewTable');
+            previewTable.innerHTML = '';
+
+            csvData.slice(0, 10).forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 dark:hover:bg-slate-700';
+                tr.innerHTML = `
+                    <td class="px-3 py-2 text-xs">${row.Filière}</td>
+                    <td class="px-3 py-2 text-xs">${row.Niveau}</td>
+                    <td class="px-3 py-2 text-xs">${row.Matière}</td>
+                    <td class="px-3 py-2 text-xs font-mono">${row.Code_Matière}</td>
+                    <td class="px-3 py-2 text-xs text-center">${row.ECTS}</td>
+                    <td class="px-3 py-2 text-xs font-mono">${row.Matricule_Étudiant}</td>
+                    <td class="px-3 py-2 text-xs">${row.Nom_Étudiant}</td>
+                    <td class="px-3 py-2 text-xs">${row.Prénom_Étudiant}</td>
+                    <td class="px-3 py-2 text-xs text-blue-600">${row.Email_Étudiant}</td>
+                `;
+                previewTable.appendChild(tr);
+            });
+
+            document.getElementById('csvPreview').classList.remove('hidden');
+        }
+
+        function importCSVData() {
+            const btn = document.getElementById('importBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Import en cours...';
+            btn.disabled = true;
+
+            // Simulation de l'import
+            setTimeout(() => {
+                const filieres = new Set(csvData.map(row => row.Filière));
+                const matieres = new Set(csvData.map(row => row.Matière));
+                const etudiants = new Set(csvData.map(row => row.Matricule_Étudiant));
+
+                alert(`Import terminé avec succès !\n\n• ${filieres.size} filière(s) créée(s)\n• ${matieres.size} matière(s) importée(s)\n• ${etudiants.size} étudiant(s) ajouté(s)\n• ${csvData.length} inscription(s) enregistrée(s)`);
+
+                closeModal('newProgramModal');
+                // Simuler un rechargement des données
+                window.location.reload();
+            }, 2500);
+        }
+
+        // Gestion du drag & drop pour la zone d'upload CSV avec animations améliorées
+        const uploadZone = document.getElementById('csvUploadZone');
+        let dragCounter = 0;
+
+        uploadZone.addEventListener('dragenter', function (e) {
+            e.preventDefault();
+            dragCounter++;
+            this.classList.add('border-emerald-400', 'bg-gradient-to-br', 'from-emerald-50', 'to-blue-50', 'scale-105', 'shadow-2xl');
+            this.classList.remove('border-gray-300');
+
+            // Ajouter un effet de pulsation
+            const uploadIcon = this.querySelector('.fa-cloud-upload');
+            if (uploadIcon) {
+                uploadIcon.classList.add('animate-bounce');
+            }
+        });
+
+        uploadZone.addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            dragCounter--;
+
+            if (dragCounter === 0) {
+                this.classList.remove('border-emerald-400', 'bg-gradient-to-br', 'from-emerald-50', 'to-blue-50', 'scale-105', 'shadow-2xl');
+                this.classList.add('border-gray-300');
+
+                // Retirer l'effet de pulsation
+                const uploadIcon = this.querySelector('.fa-cloud-upload');
+                if (uploadIcon) {
+                    uploadIcon.classList.remove('animate-bounce');
+                }
+            }
+        });
+
+        uploadZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        uploadZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dragCounter = 0;
+            this.classList.remove('border-emerald-400', 'bg-gradient-to-br', 'from-emerald-50', 'to-blue-50', 'scale-105', 'shadow-2xl');
+            this.classList.add('border-gray-300');
+
+            // Retirer l'effet de pulsation
+            const uploadIcon = this.querySelector('.fa-cloud-upload');
+            if (uploadIcon) {
+                uploadIcon.classList.remove('animate-bounce');
+            }
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // Animation de succès pour le drop
+                this.classList.add('animate-pulse', 'bg-green-50', 'border-green-400');
+
+                setTimeout(() => {
+                    this.classList.remove('animate-pulse', 'bg-green-50', 'border-green-400');
+                }, 1000);
+
+                document.getElementById('csvFileInput').files = files;
+                handleCSVUpload({ target: { files: files } });
+            }
+        });
+
+        uploadZone.addEventListener('click', function () {
+            document.getElementById('csvFileInput').click();
+        });
+
+        // Améliorer la fonction handleCSVUpload avec des animations
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Vérifier le type de fichier
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                // Animation d'erreur
+                uploadZone.classList.add('animate-shake', 'bg-red-50', 'border-red-400');
+                setTimeout(() => {
+                    uploadZone.classList.remove('animate-shake', 'bg-red-50', 'border-red-400');
+                }, 1000);
+
+                alert('⚠️ Veuillez sélectionner un fichier CSV valide !');
+                return;
+            }
+
+            // Vérifier la taille du fichier (10MB max)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('⚠️ Le fichier est trop volumineux. Taille maximum : 10MB');
+                return;
+            }
+
+            // Animation de transition vers succès
+            const uploadPrompt = document.getElementById('uploadPrompt');
+            const uploadSuccess = document.getElementById('uploadSuccess');
+
+            uploadPrompt.classList.add('animate-fade-out');
+
+            setTimeout(() => {
+                // Afficher le nom du fichier
+                document.getElementById('fileName').textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+                uploadPrompt.classList.add('hidden');
+                uploadSuccess.classList.remove('hidden');
+                uploadSuccess.classList.add('animate-fade-in');
+            }, 300);
+
+            // Lire le fichier CSV
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result;
+                parseCSVData(text);
+            };
+            reader.readAsText(file);
+        }
+
+        // Fonctions pour gérer les tabs des filières
+        function switchTab(filiereId, tabName) {
+            // Masquer tous les contenus de tabs pour cette filière
+            document.querySelectorAll(`[id^="${filiereId}-content-"]`).forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Réinitialiser tous les tabs
+            document.querySelectorAll(`[id^="${filiereId}-tab-"]`).forEach(tab => {
+                tab.classList.remove('border-emerald-500', 'text-emerald-600');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Activer le tab sélectionné
+            document.getElementById(`${filiereId}-tab-${tabName}`).classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById(`${filiereId}-tab-${tabName}`).classList.add('border-emerald-500', 'text-emerald-600');
+
+            // Afficher le contenu correspondant
+            document.getElementById(`${filiereId}-content-${tabName}`).classList.remove('hidden');
+        }
+
+        // S'assurer que tout est initialisé correctement
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Page department_programs.html chargée');
+            console.log('✅ Modal element:', document.getElementById('newProgramModal') ? 'Found' : 'NOT FOUND');
+            console.log('✅ Upload zone:', document.getElementById('csvUploadZone') ? 'Found' : 'NOT FOUND');
+            console.log('✅ openModal function:', typeof window.openModal);
+            
+            // Test rapide du modal
+            const testButton = document.querySelector('[onclick="openModal(\'newProgramModal\')"]');
+            if (testButton) {
+                console.log('✅ Button found:', testButton);
+            }
+        });
+    </script>
+</body>
+
+</html>

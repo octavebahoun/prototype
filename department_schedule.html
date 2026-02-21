@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr" class="transition-colors duration-300">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academix - Emploi du Temps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-item-active {
+            color: #10B981;
+            position: relative;
+        }
+
+        .sidebar-item-active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: #10B981;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone.drag-over {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-zone:hover {
+            border-color: #10b981;
+        }
+
+        .schedule-time {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+    </style>
+</head>
+
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium overflow-hidden">
+    <div class="flex h-screen relative">
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300">
+        </div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-60 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div
+                    class="text-[#10B981] text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">
+                    Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <div
+                    class="px-4 py-2 text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest italic">
+                    Département Control</div>
+                <a href="chef_dept_dashboard.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-chart-simple text-base"></i>
+                    <span class="text-sm">Vue d'ensemble</span>
+                </a>
+                <a href="department_programs.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-list-check text-base"></i>
+                    <span class="text-sm">Gestion Filières</span>
+                </a>
+                <a href="import_grades.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-file-csv text-base"></i>
+                    <span class="text-sm">Import CSV - Notes</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-calendar-days text-base"></i>
+                    <span class="text-sm">Emploi du Temps</span>
+                </a>
+            </nav>
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+                    <span class="text-sm">Déconnexion</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <header
+                class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4">
+                        <button id="sidebar-toggle"
+                            class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-500 border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all"><i
+                                class="fa-solid fa-bars-staggered"></i></button>
+                        <div>
+                            <h1
+                                class="text-lg lg:text-2xl font-black text-gray-900 dark:text-slate-100 uppercase italic tracking-tighter leading-none">
+                                Emploi du Temps</h1>
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Département
+                                Informatique</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="theme-toggle"
+                            class="w-10 lg:w-12 h-10 lg:h-12 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl lg:rounded-2xl flex items-center justify-center text-gray-500 dark:text-slate-400 hover:text-emerald-500 transition-all shadow-sm">
+                            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon"></i>
+                            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
+                <!-- Sélecteur de vue et filtres -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h2
+                                class="text-lg font-black text-gray-900 dark:text-slate-100 uppercase tracking-tighter mb-2">
+                                Gestion des Emplois du Temps</h2>
+                            <p class="text-xs text-gray-500">Consultez et gérez les emplois du temps pour chaque filière
+                                et année d'études</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-500 font-bold">Vue:</label>
+                                <select id="viewMode"
+                                    class="px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                    onchange="changeView()">
+                                    <option value="overview">Vue d'ensemble</option>
+                                    <option value="schedule">Emploi du temps</option>
+                                    <option value="upload">Upload</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-500 font-bold">Filière:</label>
+                                <select id="programFilter"
+                                    class="px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                    onchange="filterSchedule()">
+                                    <option value="">Toutes</option>
+                                    <option value="licence-info">Licence Informatique</option>
+                                    <option value="master-info">Master Informatique</option>
+                                    <option value="bts-info">BTS Informatique</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vue d'ensemble des emplois du temps -->
+                <div id="overviewSection" class="space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Licence Informatique -->
+                        <div
+                            class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+                            <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div
+                                        class="w-12 h-12 bg-blue-100 dark:bg-blue-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-blue-600 font-black text-lg">L</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100">Licence Informatique
+                                        </h3>
+                                        <p class="text-xs text-gray-500">3 années d'études</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6 space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">L1</p>
+                                        <p class="text-xs text-gray-500">52 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Publié</span>
+                                        <button onclick="viewSchedule('L1')" class="text-blue-500 hover:text-blue-700">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">L2</p>
+                                        <p class="text-xs text-gray-500">48 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Publié</span>
+                                        <button onclick="viewSchedule('L2')" class="text-blue-500 hover:text-blue-700">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">L3</p>
+                                        <p class="text-xs text-gray-500">56 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold">Brouillon</span>
+                                        <button onclick="uploadSchedule('L3')"
+                                            class="text-emerald-500 hover:text-emerald-700">
+                                            <i class="fa-solid fa-upload"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Master Informatique -->
+                        <div
+                            class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+                            <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div
+                                        class="w-12 h-12 bg-purple-100 dark:bg-purple-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-purple-600 font-black text-lg">M</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100">Master Informatique
+                                        </h3>
+                                        <p class="text-xs text-gray-500">2 années d'études</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6 space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">M1</p>
+                                        <p class="text-xs text-gray-500">42 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Publié</span>
+                                        <button onclick="viewSchedule('M1')"
+                                            class="text-purple-500 hover:text-purple-700">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">M2</p>
+                                        <p class="text-xs text-gray-500">42 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Non
+                                            défini</span>
+                                        <button onclick="uploadSchedule('M2')"
+                                            class="text-emerald-500 hover:text-emerald-700">
+                                            <i class="fa-solid fa-upload"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BTS Informatique -->
+                        <div
+                            class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+                            <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div
+                                        class="w-12 h-12 bg-green-100 dark:bg-green-500/10 rounded-xl flex items-center justify-center">
+                                        <span class="text-green-600 font-black text-sm">BTS</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-black text-gray-900 dark:text-slate-100">BTS Informatique</h3>
+                                        <p class="text-xs text-gray-500">2 années d'études</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6 space-y-4">
+                                <div
+                                    class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">1ère Année</p>
+                                        <p class="text-xs text-gray-500">108 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Publié</span>
+                                        <button onclick="viewSchedule('BTS1')"
+                                            class="text-green-500 hover:text-green-700">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-500/10 rounded-lg">
+                                    <div>
+                                        <p class="font-bold text-gray-900 dark:text-slate-100">2ème Année</p>
+                                        <p class="text-xs text-gray-500">108 étudiants</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Publié</span>
+                                        <button onclick="viewSchedule('BTS2')"
+                                            class="text-green-500 hover:text-green-700">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vue emploi du temps -->
+                <div id="scheduleSection"
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-6 hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 id="scheduleTitle"
+                                class="font-black text-gray-900 dark:text-slate-100 uppercase tracking-tight text-lg">
+                                Emploi du Temps - L1</h3>
+                            <p class="text-xs text-gray-500 mt-1">Semaine du 15 au 21 Janvier 2025</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-bold hover:bg-blue-600 transition-all">
+                                <i class="fa-solid fa-download mr-2"></i>Télécharger PDF
+                            </button>
+                            <button onclick="showUploadModal()"
+                                class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-bold hover:bg-emerald-600 transition-all">
+                                <i class="fa-solid fa-edit mr-2"></i>Modifier
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border border-gray-200 dark:border-slate-700">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Heures</th>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Lundi</th>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Mardi</th>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Mercredi</th>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Jeudi</th>
+                                    <th
+                                        class="border border-gray-200 dark:border-slate-700 p-3 bg-gray-50 dark:bg-slate-800 text-xs font-bold text-gray-900 dark:text-slate-100 uppercase">
+                                        Vendredi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-50 dark:bg-slate-800 font-bold text-center">
+                                        08:00-10:00</td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-blue-100 dark:bg-blue-500/20 p-2 rounded">
+                                            <p class="font-bold text-blue-800 dark:text-blue-200 text-xs">Programmation
+                                                C</p>
+                                            <p class="text-xs text-blue-600 dark:text-blue-300">Prof. Turing • Amphi A
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-green-100 dark:bg-green-500/20 p-2 rounded">
+                                            <p class="font-bold text-green-800 dark:text-green-200 text-xs">
+                                                Mathématiques</p>
+                                            <p class="text-xs text-green-600 dark:text-green-300">Prof. Euler • Salle
+                                                201</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-purple-100 dark:bg-purple-500/20 p-2 rounded">
+                                            <p class="font-bold text-purple-800 dark:text-purple-200 text-xs">Anglais
+                                            </p>
+                                            <p class="text-xs text-purple-600 dark:text-purple-300">Prof. Smith • Salle
+                                                105</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-orange-100 dark:bg-orange-500/20 p-2 rounded">
+                                            <p class="font-bold text-orange-800 dark:text-orange-200 text-xs">
+                                                Algorithmique</p>
+                                            <p class="text-xs text-orange-600 dark:text-orange-300">Prof. Dijkstra • Lab
+                                                Info</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-red-100 dark:bg-red-500/20 p-2 rounded">
+                                            <p class="font-bold text-red-800 dark:text-red-200 text-xs">Architecture</p>
+                                            <p class="text-xs text-red-600 dark:text-red-300">Prof. Von Neumann • Amphi
+                                                B</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-50 dark:bg-slate-800 font-bold text-center">
+                                        10:15-12:15</td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-green-100 dark:bg-green-500/20 p-2 rounded">
+                                            <p class="font-bold text-green-800 dark:text-green-200 text-xs">TP
+                                                Programmation</p>
+                                            <p class="text-xs text-green-600 dark:text-green-300">Prof. Turing • Lab
+                                                Info</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-blue-100 dark:bg-blue-500/20 p-2 rounded">
+                                            <p class="font-bold text-blue-800 dark:text-blue-200 text-xs">Base de
+                                                Données</p>
+                                            <p class="text-xs text-blue-600 dark:text-blue-300">Prof. Codd • Salle 203
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-100 dark:bg-slate-800">
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-purple-100 dark:bg-purple-500/20 p-2 rounded">
+                                            <p class="font-bold text-purple-800 dark:text-purple-200 text-xs">Systèmes
+                                            </p>
+                                            <p class="text-xs text-purple-600 dark:text-purple-300">Prof. Torvalds • Lab
+                                                Système</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-yellow-100 dark:bg-yellow-500/20 p-2 rounded">
+                                            <p class="font-bold text-yellow-800 dark:text-yellow-200 text-xs">
+                                                Communication</p>
+                                            <p class="text-xs text-yellow-600 dark:text-yellow-300">Prof. Dupont • Salle
+                                                102</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-50 dark:bg-slate-800 font-bold text-center">
+                                        14:00-16:00</td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-orange-100 dark:bg-orange-500/20 p-2 rounded">
+                                            <p class="font-bold text-orange-800 dark:text-orange-200 text-xs">TD
+                                                Algorithmique</p>
+                                            <p class="text-xs text-orange-600 dark:text-orange-300">Prof. Dijkstra •
+                                                Salle 301</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-red-100 dark:bg-red-500/20 p-2 rounded">
+                                            <p class="font-bold text-red-800 dark:text-red-200 text-xs">Projet</p>
+                                            <p class="text-xs text-red-600 dark:text-red-300">Équipe encadrante • Lab
+                                                Projet</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-indigo-100 dark:bg-indigo-500/20 p-2 rounded">
+                                            <p class="font-bold text-indigo-800 dark:text-indigo-200 text-xs">Réseaux
+                                            </p>
+                                            <p class="text-xs text-indigo-600 dark:text-indigo-300">Prof. Cerf • Lab
+                                                Réseau</p>
+                                        </div>
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-pink-100 dark:bg-pink-500/20 p-2 rounded">
+                                            <p class="font-bold text-pink-800 dark:text-pink-200 text-xs">Génie Logiciel
+                                            </p>
+                                            <p class="text-xs text-pink-600 dark:text-pink-300">Prof. Brooks • Amphi C
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-100 dark:bg-slate-800">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-50 dark:bg-slate-800 font-bold text-center">
+                                        16:15-18:15</td>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-100 dark:bg-slate-800">
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-teal-100 dark:bg-teal-500/20 p-2 rounded">
+                                            <p class="font-bold text-teal-800 dark:text-teal-200 text-xs">TP Base de
+                                                Données</p>
+                                            <p class="text-xs text-teal-600 dark:text-teal-300">Prof. Codd • Lab BDD</p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-100 dark:bg-slate-800">
+                                    </td>
+                                    <td class="border border-gray-200 dark:border-slate-700 p-2">
+                                        <div class="bg-cyan-100 dark:bg-cyan-500/20 p-2 rounded">
+                                            <p class="font-bold text-cyan-800 dark:text-cyan-200 text-xs">TP Réseaux</p>
+                                            <p class="text-xs text-cyan-600 dark:text-cyan-300">Prof. Cerf • Lab Réseau
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        class="border border-gray-200 dark:border-slate-700 p-2 bg-gray-100 dark:bg-slate-800">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section upload -->
+                <div id="uploadSection"
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-6 hidden">
+                    <h3 class="font-black text-gray-900 dark:text-slate-100 uppercase tracking-tight text-lg mb-4">
+                        Upload Emploi du Temps</h3>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Filière
+                                *</label>
+                            <select
+                                class="w-full px-4 py-3 border border-gray-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-slate-800">
+                                <option value="">Choisir une filière</option>
+                                <option value="licence-info">Licence Informatique</option>
+                                <option value="master-info">Master Informatique</option>
+                                <option value="bts-info">BTS Informatique</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Année d'études
+                                *</label>
+                            <select
+                                class="w-full px-4 py-3 border border-gray-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-slate-800">
+                                <option value="">Choisir une année</option>
+                                <option value="L1">L1</option>
+                                <option value="L2">L2</option>
+                                <option value="L3">L3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="upload-zone p-8 rounded-xl text-center cursor-pointer mb-6"
+                        onclick="document.getElementById('scheduleFile').click()">
+                        <div
+                            class="w-16 h-16 bg-purple-100 dark:bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-calendar-plus text-2xl text-purple-500"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-slate-100 mb-2">Uploader l'emploi du temps</h4>
+                        <p class="text-sm text-gray-500">Formats acceptés : .pdf, .xlsx, .docx (Max 10MB)</p>
+                    </div>
+                    <input type="file" id="scheduleFile" accept=".pdf,.xlsx,.docx" class="hidden">
+
+                    <div class="flex gap-4">
+                        <button
+                            class="flex-1 px-6 py-3 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all font-bold">
+                            Annuler
+                        </button>
+                        <button
+                            class="flex-1 px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all font-bold">
+                            <i class="fa-solid fa-upload mr-2"></i>Publier l'Emploi du Temps
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
+        close.addEventListener('click', closeSidebar);
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            lightIcon.classList.remove('hidden'); darkIcon.classList.add('hidden');
+        } else {
+            lightIcon.classList.add('hidden'); darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function () {
+            darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden');
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+
+        // View management
+        function changeView() {
+            const viewMode = document.getElementById('viewMode').value;
+            const sections = ['overviewSection', 'scheduleSection', 'uploadSection'];
+
+            sections.forEach(section => {
+                document.getElementById(section).classList.add('hidden');
+            });
+
+            switch (viewMode) {
+                case 'overview':
+                    document.getElementById('overviewSection').classList.remove('hidden');
+                    break;
+                case 'schedule':
+                    document.getElementById('scheduleSection').classList.remove('hidden');
+                    break;
+                case 'upload':
+                    document.getElementById('uploadSection').classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function viewSchedule(level) {
+            document.getElementById('scheduleTitle').textContent = `Emploi du Temps - ${level}`;
+            document.getElementById('viewMode').value = 'schedule';
+            changeView();
+        }
+
+        function uploadSchedule(level) {
+            document.getElementById('viewMode').value = 'upload';
+            changeView();
+        }
+
+        function showUploadModal() {
+            document.getElementById('viewMode').value = 'upload';
+            changeView();
+        }
+
+        function filterSchedule() {
+            // Logique de filtrage par filière
+            console.log('Filtering by program:', document.getElementById('programFilter').value);
+        }
+
+        // Drag and drop for upload
+        const uploadZones = document.querySelectorAll('.upload-zone');
+
+        uploadZones.forEach(zone => {
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+
+            zone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+            });
+
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    console.log('File dropped:', files[0].name);
+                    // Traitement du fichier ici
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

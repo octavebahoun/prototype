@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr" class="transition-colors duration-300">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academix - Gérer Utilisateurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#020617', 900: '#0f172a', 800: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-item-active {
+            color: #10B981;
+            position: relative;
+        }
+
+        .sidebar-item-active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: #10B981;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="transition-colors duration-300 bg-[#F8FAFC] dark:bg-slate-950 font-medium overflow-hidden">
+    <div class="flex h-screen relative">
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300">
+        </div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-60 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto font-bold">
+            <div class="p-8 flex items-center justify-between lg:justify-start gap-4 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-r-full"></div>
+                <div
+                    class="text-emerald-500 text-3xl font-black tracking-tighter italic uppercase underline decoration-4 decoration-emerald-200">
+                    Academix</div>
+                <button id="sidebar-close" class="lg:hidden text-gray-400 hover:text-emerald-500 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 px-4 mt-4 space-y-1">
+                <div
+                    class="px-4 py-2 text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest">
+                    Admin Control</div>
+                <a href="super_admin_dashboard.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-gauge-high text-base"></i>
+                    <span class="text-sm">Vue d'ensemble</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl sidebar-item-active">
+                    <i class="fa-solid fa-users-gear text-base"></i>
+                    <span class="text-sm">Gérer Utilisateurs</span>
+                </a>
+                <a href="departments.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-emerald-500 transition-all">
+                    <i class="fa-solid fa-sitemap text-base"></i>
+                    <span class="text-sm">Départements</span>
+                </a>
+            </nav>
+
+            <div class="mt-auto px-4 pb-8">
+                <a href="login.html"
+                    class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                    <span class="text-sm">Déconnexion</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar transition-colors duration-300">
+            <header
+                class="sticky top-0 z-30 bg-[#F8FAFC]/80 dark:bg-slate-950/80 backdrop-blur-md px-4 lg:px-8 py-4 lg:py-6 border-b border-gray-100 dark:border-slate-800">
+                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                    <div class="flex items-center gap-4 text-emerald-500">
+                        <button id="sidebar-toggle"
+                            class="lg:hidden w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-slate-800 rounded-xl hover:bg-white transition-all">
+                            <i class="fa-solid fa-bars-staggered"></i>
+                        </button>
+                        <div>
+                            <h1
+                                class="text-2xl font-black text-gray-900 dark:text-slate-100 uppercase tracking-tighter">
+                                Gestion des Utilisateurs</h1>
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Super Admin
+                                Panel</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button
+                            class="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-emerald-600 transition-all">
+                            <i class="fa-solid fa-plus mr-2"></i>Nouvel Utilisateur
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-8 max-w-7xl mx-auto space-y-6">
+                <!-- Stats rapides -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-blue-50 dark:bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-users text-blue-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Utilisateurs
+                                </p>
+                                <p class="text-xl font-black text-gray-900 dark:text-slate-100">12,450</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-user-check text-emerald-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Actifs</p>
+                                <p class="text-xl font-black text-gray-900 dark:text-slate-100">11,230</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-amber-50 dark:bg-amber-500/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-user-clock text-amber-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">En Attente</p>
+                                <p class="text-xl font-black text-gray-900 dark:text-slate-100">892</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-red-50 dark:bg-red-500/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-user-slash text-red-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Suspendus</p>
+                                <p class="text-xl font-black text-gray-900 dark:text-slate-100">328</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des utilisateurs -->
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 dark:border-slate-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h2
+                                    class="text-lg font-black text-gray-900 dark:text-slate-100 uppercase tracking-tighter">
+                                    Liste des Utilisateurs</h2>
+                                <p class="text-xs text-gray-500 mt-1">Gérez tous les utilisateurs de la plateforme</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="relative">
+                                    <input type="text" placeholder="Rechercher un utilisateur..."
+                                        class="pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-slate-800">
+                                    <i
+                                        class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                                </div>
+                                <select
+                                    class="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-slate-800">
+                                    <option>Tous les rôles</option>
+                                    <option>Chef de Département</option>
+                                    <option>Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 dark:bg-slate-800">
+                                <tr>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Utilisateur</th>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Rôle</th>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Département</th>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Statut</th>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Dernière connexion</th>
+                                    <th
+                                        class="text-left py-3 px-6 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 bg-emerald-100 dark:bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                                                <span class="text-emerald-600 font-bold text-sm">MA</span>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-900 dark:text-slate-100">Mahmud Ali</p>
+                                                <p class="text-xs text-gray-500">mahmud.ali@academix.edu</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span
+                                            class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-bold">Étudiant</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="text-sm text-gray-600 dark:text-slate-400">Informatique</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold">Actif</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="text-sm text-gray-600 dark:text-slate-400">Il y a 2 heures</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center gap-2">
+                                            <button class="p-1 text-gray-400 hover:text-emerald-500 transition-colors">
+                                                <i class="fa-solid fa-eye text-sm"></i>
+                                            </button>
+                                            <button class="p-1 text-gray-400 hover:text-blue-500 transition-colors">
+                                                <i class="fa-solid fa-edit text-sm"></i>
+                                            </button>
+                                            <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                                                <i class="fa-solid fa-trash text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Plus de lignes... -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 bg-blue-100 dark:bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                                <span class="text-blue-600 font-bold text-sm">MF</span>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-900 dark:text-slate-100">Dr. Mourchid
+                                                    FOLARIN</p>
+                                                <p class="text-xs text-gray-500">mourchid@univ.bj</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span
+                                            class="bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-xs font-bold">Chef
+                                            Dépt.</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="text-sm text-gray-600 dark:text-slate-400">Informatique</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span
+                                            class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-lg text-xs font-bold">Actif</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="text-sm text-gray-600 dark:text-slate-400">Il y a 1 jour</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center gap-2">
+                                            <button class="p-1 text-gray-400 hover:text-emerald-500 transition-colors">
+                                                <i class="fa-solid fa-eye text-sm"></i>
+                                            </button>
+                                            <button class="p-1 text-gray-400 hover:text-blue-500 transition-colors">
+                                                <i class="fa-solid fa-edit text-sm"></i>
+                                            </button>
+                                            <button class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                                                <i class="fa-solid fa-trash text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="p-6 border-t border-gray-100 dark:border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm text-gray-500">Affichage de 1 à 20 sur 12,450 utilisateurs</p>
+                            <div class="flex items-center gap-2">
+                                <button class="px-3 py-2 text-gray-400 hover:text-gray-600 text-sm">Précédent</button>
+                                <button
+                                    class="px-3 py-2 bg-emerald-500 text-white rounded-lg text-sm font-bold">1</button>
+                                <button class="px-3 py-2 text-gray-400 hover:text-gray-600 text-sm">2</button>
+                                <button class="px-3 py-2 text-gray-400 hover:text-gray-600 text-sm">3</button>
+                                <button class="px-3 py-2 text-gray-400 hover:text-gray-600 text-sm">Suivant</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggle = document.getElementById('sidebar-toggle');
+        const close = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        close.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+</body>
+
+</html>
